@@ -1,3 +1,7 @@
+def valid_models():
+    return ["WC", "IC"]
+
+
 def small_graph_data():
     graph = {
         'A': {'B': 1, 'C': 1},
@@ -25,12 +29,12 @@ def small_graph_data():
     return graph
 
 
-def big_graph_data():
-    graph, _ = import_hep_WC()
+def big_graph_data(model="WC"):
+    graph, _ = import_hep_WC(model)
     return graph
 
 
-def import_hep_WC():
+def import_hep_WC(model="WC"):
     ''' Hep_WC contains:
         15,233 nodes
         62,796 edges
@@ -52,7 +56,14 @@ def import_hep_WC():
                 inf_network[user1] = {}
             if user2 not in inf_network:
                 inf_network[user2] = {}
-            inf_network[user1][user2] = inf_score
+
+            if model == "IC":
+                inf_network[user1][user2] = 0.1
+            elif model == "WC":
+                inf_network[user1][user2] = inf_score
+            else:
+                raise Exception("Unknown model: {}".format(model))
+
             if inf_score == 1.0:
                 if user1 not in condict:
                     condict[user1] = 0

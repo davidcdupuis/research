@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 '''
 '''
 
@@ -29,21 +30,27 @@ if __name__ == "__main__":
                         help="Number of simulation.")
     parser.add_argument('--small', default=False, action="store_true",
                         help="Whether to use the small graph or the big one.")
-
+    parser.add_argument("--model", default="WC", help="Model to use")
     args = parser.parse_args()
+
+    if args.model not in research_data.valid_models():
+        msg = "Invalid arguments [model] -> Received: {}"
+        raise Exception(msg.format(args.model))
 
     # Here are available:
     #  - args.number: (int) The  number of simulation
-    #  - args.small: Whether to use the small graph or the big one
+    #  - args.small: (bool) Whether to use the small graph or the big one
+    #  -args.model: (string) The model to use
 
-    msg = "Searching for optimal seed set size of graph [{} simulations]"
-    print(msg.format(args.number))
+    msg = "Searching for optimal seed set size of graph [{} simulations] \n"
+    msg += "Use model: {}"
+    print(msg.format(args.number, args.model))
 
     graph = {}
     if args.small:
         graph = research_data.small_graph_data()
     else:
-        graph = research_data.big_graph_data()
+        graph = research_data.big_graph_data(args.model)
 
     opt_size = round(find_opt_seed_size(graph,
                                         args.number))

@@ -6,10 +6,7 @@
 '''
 
 import random
-import time
-import operator
 from decimal import Decimal
-import multiprocessing as mp
 from scipy.special import comb
 
 
@@ -58,10 +55,9 @@ def num_seed_sets(n, k=0, g=0):
     if k <= 0:
         print("There are 2^{} number of possible seed sets.".format(n))
     else:
+        msg = "There are {:.2E} number of possible seed sets."
         if g <= 0:
-            print("There are {:.2E} number of possible seed sets.".format(
-                                            Decimal(comb(n, k, exact = True))))
+            print(msg.format(Decimal(comb(n, k, exact=True))))
         else:
-            print("There are {:.2E} number of possible seed sets.".format(
-                                    Decimal(comb(n, k, exact = True) -
-                                    comb(n - g, k - g, exact = True))))
+            print(msg.format(Decimal(comb(n, k, exact=True) -
+                                     comb(n - g, k - g, exact=True))))
