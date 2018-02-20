@@ -102,12 +102,13 @@ def test(graph):
         seed_size += 1
     return seed_size
 
+
 def propagate(origin, node, non_activated_nodes):
-    #print("> propagate")
+    # print("> propagate")
     q = []
     q.append(node)
     while q:
-        #print("Queue: {0}".format(q))
+        # print("Queue: {0}".format(q))
         curr = q.pop(0)
         # print("non_activated_nodes: {0}".format(non_activated_nodes))
         #print("curr: {0}".format(curr))
