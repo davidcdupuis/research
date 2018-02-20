@@ -65,6 +65,3 @@ def num_seed_sets(n, k=0, g=0):
             print("There are {:.2E} number of possible seed sets.".format(
                                     Decimal(comb(n, k, exact = True) -
                                     comb(n - g, k - g, exact = True))))
-
-if __name__ == "__main__":
-    pass
