@@ -1,0 +1,24 @@
+# Number of ids: 20
+# Number of simulations: 100
+# Max occurences count: 2
+# id id_occurences
+A 100
+J 100
+E 64
+L 61
+I 55
+O 54
+R 51
+G 50
+C 49
+D 47
+H 47
+B 45
+P 45
+F 36
+M 36
+K 34
+S 33
+N 32
+Q 29
+T 28
