@@ -6,11 +6,19 @@
     * live: compute activation probability of available node
 '''
 
+import multiprocessing as mp
+from MonteCarlo import random_walk
+
 THETA_AP = 0.8
 
-def inf_scores_graph(graph):
+def inf_scores_graph(graph, values, num_sim=10000):
     ''' Compute the influence score of all the nodes in the graph '''
-    pass
+    for node in graph.keys():
+        inf_scores = []
+        for _ in range(num_sim):
+            inf_scores.append(random_walk(graph, node))
+        inf_score = sum(inf_scores) / float(len(inf_scores))
+        values[node]['inf'] = inf_score
 
 
 def target(node):
@@ -27,12 +35,24 @@ def update_ap(graph, node):
     pass
 
 
-def inf_threshold(inf_score_distribution):
+def inf_score_array(values):
     '''
-        Compute influence threshold based on influence score distribution
-        Selects threshold as top 10% of influencers
     '''
-    pass
+    # extract from values influence score array
+    arr = []
+    for node in values.keys():
+        arr.append(values[node]['inf'])
+    arr = sorted(arr)
+    return arr
+
+def inf_threshold_index(inf_score_array, top=20):
+    '''
+        Finds the index of the influence threshold
+        values: dict containing all scores
+        top: top percentage desired
+    '''
+    index = len(inf_score_array) - len(inf_score_array) * top / 100
+    return index
 
 
 if __name__ == "__main__":
@@ -40,7 +60,42 @@ if __name__ == "__main__":
         pass argument to test RTIM with Python dic or Neo4J database
         second argument is file or database name to define data to use
     '''
+    G = {
+            'A': {'B': 1, 'C': 1},
+            'B': {'D': 0.2},
+            'C': {'D': 0.2,  'E': 0.3},
+            'D': {'E': 0.3, 'G': 0.3, 'I': 0.25},
+            'E': {'F': 1, 'D': 0.2, 'H': 0.25},
+            'F': {},
+            'G': {'D': 0.2, 'H': 0.25, 'L': 0.25},
+            'H': {'E': 0.3, 'G': 0.3, 'R': 0.5, 'O': 0.5},
+            'I': {'K': 1, 'L': 0.25, 'D': 0.2},
+            'J': {'I': 0.25},
+            'K': {'I': 0.25},
+            'L': {'I': 0.25, 'G': 0.3, 'M': 1, 'N': 1},
+            'M': {'L': 0.25},
+            'N': {'L': 0.25},
+            'O': {'H': 0.25, 'P': 0.5},
+            'P': {'T': 1, 'O': 0.5, 'Q': 1},
+            'Q': {},
+            'R': {'S': 1, 'P': 0.5, 'H': 0.25},
+            'S': {'R': 0.5},
+            'T': {}
+        }
 
     print("Pre-Processing")
+    print("Computing influence scores of all nodes")
+    graph_values = {}
+    for node in G.keys():
+        graph_values[node] = {'inf': 0, 'ap': 0}
 
-    print("Live")
+    inf_scores_graph(G, graph_values)
+    print(graph_values)
+
+    inf_scores = inf_score_array(graph_values)
+    print("")
+    print(inf_scores)
+    print("")
+    theta_inf_index = int(inf_threshold_index(inf_scores))
+    theta_inf = inf_scores[theta_inf_index]
+    print("\nInfluence threshold: {}".format(theta_inf))
