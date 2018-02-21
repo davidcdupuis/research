@@ -93,8 +93,12 @@ if __name__ == "__main__":
     t = time.time()
     inf_scores_graph(G, graph_values)
     print("Done computing all influences scores in {} seconds".format(time.time() - t))
+    if len(G.keys()) < 30:
+        print(graph_values)
 
     inf_scores = inf_score_array(graph_values)
+    if len(G.keys()) < 30:
+        print(inf_scores)
     theta_inf_index = int(inf_threshold_index(inf_scores))
     print("\nInfluence threshold index {}".format(theta_inf_index))
     theta_inf = inf_scores[theta_inf_index]
