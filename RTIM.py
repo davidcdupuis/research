@@ -8,6 +8,7 @@
 
 import multiprocessing as mp
 from MonteCarlo import random_walk
+import time
 
 THETA_AP = 0.8
 
@@ -82,19 +83,19 @@ if __name__ == "__main__":
             'T': {}
         }
 
-    print("Pre-Processing")
-    print("Computing influence scores of all nodes")
+    print("\nPre-Processing")
+
     graph_values = {}
     for node in G.keys():
         graph_values[node] = {'inf': 0, 'ap': 0}
 
+    print("Computing influence scores of all nodes")
+    t = time.time()
     inf_scores_graph(G, graph_values)
-    print(graph_values)
+    print("Done computing all influences scores in {} seconds".format(time.time() - t))
 
     inf_scores = inf_score_array(graph_values)
-    print("")
-    print(inf_scores)
-    print("")
     theta_inf_index = int(inf_threshold_index(inf_scores))
+    print("\nInfluence threshold index {}".format(theta_inf_index))
     theta_inf = inf_scores[theta_inf_index]
     print("\nInfluence threshold: {}".format(theta_inf))
