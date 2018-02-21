@@ -9,6 +9,8 @@
 import multiprocessing as mp
 from MonteCarlo import random_walk
 import time
+import argparse
+import research_data
 
 THETA_AP = 0.8
 
@@ -16,7 +18,7 @@ def inf_scores_graph(graph, values, num_sim=10000):
     ''' Compute the influence score of all the nodes in the graph '''
     for node in graph.keys():
         with mp.Pool(mp.cpu_count()) as pool:
-            inf_scores = pool.starmap(random_walk, [(graph, node)] * num_sim)
+            inf_scores = pool.starmap(random_walk, [(graph, [node])] * num_sim)
         inf_score = sum(inf_scores) / float(len(inf_scores))
         values[node]['inf'] = inf_score
 
@@ -60,46 +62,53 @@ if __name__ == "__main__":
         pass argument to test RTIM with Python dic or Neo4J database
         second argument is file or database name to define data to use
     '''
-    G = {
-            'A': {'B': 1, 'C': 1},
-            'B': {'D': 0.2},
-            'C': {'D': 0.2,  'E': 0.3},
-            'D': {'E': 0.3, 'G': 0.3, 'I': 0.25},
-            'E': {'F': 1, 'D': 0.2, 'H': 0.25},
-            'F': {},
-            'G': {'D': 0.2, 'H': 0.25, 'L': 0.25},
-            'H': {'E': 0.3, 'G': 0.3, 'R': 0.5, 'O': 0.5},
-            'I': {'K': 1, 'L': 0.25, 'D': 0.2},
-            'J': {'I': 0.25},
-            'K': {'I': 0.25},
-            'L': {'I': 0.25, 'G': 0.3, 'M': 1, 'N': 1},
-            'M': {'L': 0.25},
-            'N': {'L': 0.25},
-            'O': {'H': 0.25, 'P': 0.5},
-            'P': {'T': 1, 'O': 0.5, 'Q': 1},
-            'Q': {},
-            'R': {'S': 1, 'P': 0.5, 'H': 0.25},
-            'S': {'R': 0.5},
-            'T': {}
-        }
+    parser = argparse.ArgumentParser(description="Multi-process optsize")
+    parser.add_argument('--small', default=False, action="store_true",
+                        help="Whether to use the small graph or the big one.")
+    parser.add_argument("--model", default="WC", help="Model to use")
+    args = parser.parse_args()
 
-    print("\nPre-Processing")
+    if args.model not in research_data.valid_models():
+        msg = "Invalid arguments [model] -> Received: {}"
+        raise Exception(msg.format(args.model))
+
+    graph_size = ""
+    if args.small:
+        graph_size = "small"
+    else:
+        graph_size = "large"
+
+    msg = "Pre-processing {} graph using RTIM\n"
+    msg += "Use model: {}"
+    print(msg.format(graph_size, args.model))
+
+    graph = {}
+    if args.small:
+        graph = research_data.small_graph_data()
+    else:
+        graph = research_data.big_graph_data(args.model)
+
+    print("Pre-Processing")
 
     graph_values = {}
-    for node in G.keys():
+    for node in graph.keys():
         graph_values[node] = {'inf': 0, 'ap': 0}
 
     print("Computing influence scores of all nodes")
     t = time.time()
-    inf_scores_graph(G, graph_values)
-    print("Done computing all influences scores in {} seconds".format(time.time() - t))
-    if len(G.keys()) < 30:
-        print(graph_values)
+    inf_scores_graph(graph, graph_values)
+    msg = "Done computing all influences scores in {} seconds"
+    print(msg.format(time.time() - t))
 
     inf_scores = inf_score_array(graph_values)
-    if len(G.keys()) < 30:
+
+    if len(graph.keys()) < 30:
+        print(graph_values)
+        print("")
         print(inf_scores)
+
     theta_inf_index = int(inf_threshold_index(inf_scores))
-    print("\nInfluence threshold index {}".format(theta_inf_index))
     theta_inf = inf_scores[theta_inf_index]
-    print("\nInfluence threshold: {}".format(theta_inf))
+
+    msg = "\nInfluence threshold index {}, value {}"
+    print(msg.format(theta_inf_index, theta_inf))

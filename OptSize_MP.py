@@ -5,7 +5,6 @@
 import time
 import multiprocessing as mp
 import argparse
-
 from OptSize import sim_spread, num_seed_sets
 import research_data
 
@@ -25,7 +24,7 @@ def find_opt_seed_size(graph, num_sim):
 
 if __name__ == "__main__":
     # Manage command-line arguments
-    parser = argparse.ArgumentParser(description="Multi-process optisize")
+    parser = argparse.ArgumentParser(description="Multi-process optsize")
     parser.add_argument("-n", "--number", type=int, default=100,
                         help="Number of simulation.")
     parser.add_argument('--small', default=False, action="store_true",
