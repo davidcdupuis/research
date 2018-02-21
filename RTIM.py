@@ -14,9 +14,8 @@ THETA_AP = 0.8
 def inf_scores_graph(graph, values, num_sim=10000):
     ''' Compute the influence score of all the nodes in the graph '''
     for node in graph.keys():
-        inf_scores = []
-        for _ in range(num_sim):
-            inf_scores.append(random_walk(graph, node))
+        with mp.Pool(mp.cpu_count()) as pool:
+            inf_scores = pool.starmap(random_walk, [(graph, node)] * num_sim)
         inf_score = sum(inf_scores) / float(len(inf_scores))
         values[node]['inf'] = inf_score
 
