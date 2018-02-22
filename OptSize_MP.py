@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     graph = {}
     if args.small:
-        graph = research_data.small_graph_data()
+        graph = research_data.small_graph_data(args.model)
     else:
         graph = research_data.big_graph_data(args.model)
 

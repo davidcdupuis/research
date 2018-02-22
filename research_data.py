@@ -1,8 +1,8 @@
 def valid_models():
-    return ["WC", "IC"]
+    return ["WC", "0.1","0.01","0.5","0.9"]
 
 
-def small_graph_data():
+def small_graph_data(model = "WC"):
     graph = {
         'A': {'B': 1, 'C': 1},
         'B': {'D': 0.2},
@@ -25,6 +25,26 @@ def small_graph_data():
         'S': {'R': 0.5},
         'T': {}
     }
+    if model == "0.1":
+        for key in graph.keys():
+            for neighbor in graph[key].keys():
+                graph[key][neighbor] = 0.1
+    elif model == "0.01":
+        for key in graph.keys():
+            for neighbor in graph[key].keys():
+                graph[key][neighbor] = 0.01
+    elif model == "0.5":
+        for key in graph.keys():
+            for neighbor in graph[key].keys():
+                graph[key][neighbor] = 0.5
+    elif model == "0.9":
+        for key in graph.keys():
+            for neighbor in graph[key].keys():
+                graph[key][neighbor] = 0.9
+    elif model == "WC":
+        return graph
+    else:
+        raise Exception("Unknown model: {}".format(model))
 
     return graph
 
@@ -57,8 +77,10 @@ def import_hep_WC(model="WC"):
             if user2 not in inf_network:
                 inf_network[user2] = {}
 
-            if model == "IC":
+            if model == "0.1":
                 inf_network[user1][user2] = 0.1
+            elif model == "0.01":
+                inf_network[user1][user2] = 0.01
             elif model == "WC":
                 inf_network[user1][user2] = inf_score
             else:
@@ -79,3 +101,6 @@ def import_hep_WC(model="WC"):
 
     # print(num)
     return (inf_network, conditions)
+
+if __name__ == "__main__":
+    small_graph_data("0.01")
