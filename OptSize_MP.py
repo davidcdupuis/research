@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # Here are available:
     #  - args.number: (int) The  number of simulation
     #  - args.small: (bool) Whether to use the small graph or the big one
-    #  -args.model: (string) The model to use
+    #  - args.model: (string) The model to use
 
     msg = "Searching for optimal seed set size of graph [{} simulations] \n"
     msg += "Use model: {}"
