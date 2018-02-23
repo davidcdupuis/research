@@ -49,18 +49,18 @@ def small_graph_data(model = "WC"):
     return graph
 
 
-def big_graph_data(model="WC"):
-    graph, _ = import_hep_WC(model)
+def big_graph_data(fname, model="WC"):
+    graph, _ = import_graph_data(fname, model)
     return graph
 
 
-def import_hep_WC(model="WC"):
+def import_graph_data(fname, model="WC"):
     ''' Hep_WC contains:
         15,233 nodes
         62,796 edges
     '''
-    print("Importing data from hep_WC.inf")
-    file_name = 'data/hep_WC.inf'
+    print("Importing data from {}".format(fname))
+    file_name = 'data/' + fname
     inf_network = {}
     conditions = []
     condict = {}
@@ -92,7 +92,7 @@ def import_hep_WC(model="WC"):
                 condict[user1] += 1
                 conditions.append((user1, user2))
 
-    print("Done importing hep_WC.inf")
+    print("Done importing {}".format(fname))
     num = {}
     for key in condict:
         if condict[key] not in num:

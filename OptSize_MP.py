@@ -30,6 +30,8 @@ if __name__ == "__main__":
     parser.add_argument('--small', default=False, action="store_true",
                         help="Whether to use the small graph or the big one.")
     parser.add_argument("--model", default="WC", help="Model to use")
+    parser.add_argument("--file", default="hep_WC",
+                        help="File name to choose graph from")
     args = parser.parse_args()
 
     if args.model not in research_data.valid_models():
@@ -47,9 +49,9 @@ if __name__ == "__main__":
 
     graph = {}
     if args.small:
-        graph = research_data.small_graph_data(args.model)
+        graph = research_data.small_graph_data(args.file, args.model)
     else:
-        graph = research_data.big_graph_data(args.model)
+        graph = research_data.big_graph_data(args.file, args.model)
 
     opt_size = round(find_opt_seed_size(graph,
                                         args.number))
