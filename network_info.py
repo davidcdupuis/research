@@ -9,6 +9,7 @@
 import research_data
 import argparse
 
+
 def avg_edge_weight(graph):
     ''' computes the avg edge weight of a graph '''
     avg = 0.0
@@ -19,13 +20,44 @@ def avg_edge_weight(graph):
             avg = avg + (graph[key][neighbor] - avg)/count
     return avg
 
+
 def conn_components(graph):
     ''' computes # connected components in graph '''
     pass
 
-def avg_degrees(graph):
-    ''' computes avg # of degrees '''
-    pass
+
+def avg_out_degrees(graph):
+    ''' computes avg # of out degrees '''
+    avg = 0
+    count = 0
+    for key in graph.keys():
+        count += 1
+        avg = avg + (len(graph[key].keys()) - avg)/count
+    return avg
+
+
+def not_reachable(graph):
+    ''' Computes number of nodes not reachable by another node '''
+    # initialize an array of all nodes
+    non_reachable = set(graph.keys())
+    for key in graph.keys():
+        for neighbor in graph[key]:
+            if neighbor in non_reachable:
+                non_reachable.remove(neighbor)
+    return len(non_reachable)
+
+
+def num_nodes(graph):
+    ''' Returns number of nodes in graph '''
+    return len(graph.keys())
+
+def num_edges(graph):
+    ''' Returns number of edges in graph '''
+    edges = 0
+    for key in graph.keys():
+        for neighbor in graph[key].keys():
+            edges += 1
+    return edges
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Multi-process optsize")
@@ -47,5 +79,17 @@ if __name__ == "__main__":
     else:
         graph = research_data.big_graph_data(args.model)
 
-    avg = avg_edge_weight(graph)
-    print("Average edge weight is {}".format(avg))
+    num_nodes = num_nodes(graph)
+    print("Number of nodes in graph: {}".format(num_nodes))
+    
+    num_edges= num_edges(graph)
+    print("Number of edges in graph: {}".format(num_edges))
+
+    avg_edge = avg_edge_weight(graph)
+    print("Average edge weight is {}".format(avg_edge))
+
+    avg_out = avg_out_degrees(graph)
+    print("Average out degree is {}".format(avg_out))
+
+    non_reachability = not_reachable(graph)
+    print("Number of non reachable nodes {}".format(non_reachability))
