@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 '''
   RTIM: our Real-Time Bidding Influence Maximization Strategy
 
@@ -47,6 +48,7 @@ def inf_score_array(values):
     arr = sorted(arr)
     return arr
 
+
 def inf_threshold_index(inf_score_array, top=20):
     '''
         Finds the index of the influence threshold
@@ -55,6 +57,14 @@ def inf_threshold_index(inf_score_array, top=20):
     '''
     index = len(inf_score_array) - len(inf_score_array) * top / 100
     return index
+
+
+def update_ap(graph, node):
+    '''
+        Updates activation probability of neighbors when considering node
+        as activated
+    '''
+    pass
 
 
 if __name__ == "__main__":

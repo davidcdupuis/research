@@ -102,5 +102,16 @@ def import_hep_WC(model="WC"):
     # print(num)
     return (inf_network, conditions)
 
+
+def import_inf_scores_csv(file_name):
+    '''
+    '''
+    inf_scores = {}
+    with open(file_name, "r") as f:
+        for line in f:
+            vals = line.strip("\n").split(",")
+            inf_scores[vals[0]] = float(vals[1])
+    return inf_scores
+
 if __name__ == "__main__":
-    small_graph_data("0.01")
+    import_inf_scores_csv('results.csv')
