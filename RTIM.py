@@ -8,7 +8,7 @@
 '''
 
 import multiprocessing as mp
-from MonteCarlo import random_walk
+from monte_carlo import random_walk
 import time
 import argparse
 import research_data

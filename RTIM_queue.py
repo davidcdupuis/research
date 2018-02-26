@@ -8,7 +8,7 @@
 '''
 import csv
 from multiprocessing import Process, Queue, Lock, cpu_count
-from MonteCarlo import monte_carlo_inf_score_est
+from monte_carlo import monte_carlo_inf_score_est
 import argparse
 import research_data
 
