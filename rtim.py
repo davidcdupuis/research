@@ -60,12 +60,28 @@ def inf_threshold_index(inf_score_array, top=20):
     return index
 
 
-def update_ap(graph, node, values):
+def update_ap(node, new_path_weight, values):
+    '''
+        Update node's activation probability
+    '''
+    values[node]['ap'] = 1 - (1 - values[node]['ap']) * (1 - new_path_weight)
+
+
+def update_neighbors_ap(graph, node, values, path=1 ,depth=3):
     '''
         Updates activation probability of neighbors when considering node
         as activated
+        Recursive function
     '''
-    return values
+    # explore each neighbor
+    for neighbor in graph[node].keys():
+        # check if the neighbor has not already been visited on this path
+        # to avoid cycles
+        # update the ap of the neighbor with edge weight
+        new_path = path * graph[node][neighbor]
+        update_ap(neighbor, new_path, depth - 1)
+        if depth > 0:
+            update_neighbors_ap(graph, neighbor, values, new_path, depth - 1)
 
 
 def save_inf_scores(graph_values, file_name="results.csv"):
