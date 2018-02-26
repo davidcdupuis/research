@@ -8,7 +8,6 @@
 '''
 import csv
 from multiprocessing import Process, Queue, Lock, cpu_count
-
 from MonteCarlo import monte_carlo_inf_score_est
 import argparse
 import research_data
@@ -165,5 +164,3 @@ if __name__ == "__main__":
         graph = research_data.big_graph_data(args.model)
 
     manage_processes(graph)
-
-

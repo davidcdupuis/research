@@ -59,7 +59,7 @@ def import_graph_data(fname, model="WC"):
         15,233 nodes
         62,796 edges
     '''
-    print("Importing data from {}".format(fname))
+    print("> Importing data from {}".format(fname))
     file_name = 'data/' + fname
     inf_network = {}
     conditions = []
@@ -92,7 +92,7 @@ def import_graph_data(fname, model="WC"):
                 condict[user1] += 1
                 conditions.append((user1, user2))
 
-    print("Done importing {}".format(fname))
+    print(": Done importing {}".format(fname))
     num = {}
     for key in condict:
         if condict[key] not in num:
