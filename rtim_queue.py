@@ -53,7 +53,7 @@ class Writer(Process):
         super(Writer, self).__init__()
 
     def run(self):
-        with open("results.csv", "w") as f:
+        with open("results.csv", "w", newline='') as f:
             writer = csv.writer(f)
             while True:
                 line = self._queue.get()
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     '''
     parser = argparse.ArgumentParser(description="Multi-process optsize")
     parser.add_argument('-f', '--file', default="hep_wc",
-                        help="File name to choose graph from")
+                        help="File name to choose graph from", required=True)
     parser.add_argument("--model", default="WC", help="Model to use")
     args = parser.parse_args()
 

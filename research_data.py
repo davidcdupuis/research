@@ -51,15 +51,16 @@ def import_graph_data(fname, model="WC"):
     return (inf_network, conditions)
 
 
-def import_inf_scores_csv(file_name):
+def import_inf_scores_csv(file_name, values):
     '''
     '''
-    inf_scores = {}
     with open(file_name, "r") as f:
         for line in f:
             vals = line.strip("\n").split(",")
-            inf_scores[vals[0]] = float(vals[1])
-    return inf_scores
+            user = int(vals[0])
+            inf_score = float(vals[1])
+            values[user]['inf'] = inf_score
+    return values
 
 if __name__ == "__main__":
     import_inf_scores_csv('results.csv')
