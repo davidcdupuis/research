@@ -19,11 +19,14 @@ def save_file(graph, file_name):
             num_edges += 1
 
     with open('data/' + file_name, "w") as f:
-        writer = csv.writer(f, delimiter=' ')
-        writer.writerow([len(graph.keys()), num_edges])
+        f.write(str(len(graph.keys())) + ' ' + str(num_edges) + '\n')
         for key in graph.keys():
             for neighbor in graph[key].keys():
-                writer.writerow([key, neighbor, graph[key][neighbor]])
+                line = str(key) + ' '
+                line += str(neighbor) + ' '
+                line += str(graph[key][neighbor])
+                f.write(line)
+                f.write('\n')
 
     print(": File {} successfully saved to data/".format(file_name))
 
