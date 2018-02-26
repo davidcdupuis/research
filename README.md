@@ -28,3 +28,13 @@ Private repo for my thesis
 #### Log-based
 
 * Use log-files to determine which users are available to target
+
+| File              | Purpose                                          |
+|-------------------|--------------------------------------------------|
+| research_data     | functions to import research data                |
+| rtim_queue        | Multiprocessing Real-Time Influence Maximization |
+| rtim              | Real-Time Influence Maximization                 |
+| optimal_size      | Compute size of optimal seed set                 |
+| optimal_size_mp   | Multiprocess size of optimal seed set            |
+| weighted_cascade  | Module to compute weighted cascade edge weights  |
+| network_info      | Compute graph topology information               |
