@@ -13,11 +13,13 @@ def find_opt_seed_size(graph, num_sim):
     '''
         Returns optimal seed size for graph
     '''
+    print("> Searchinf for optimal seed set size")
     t = time.time()
     results = []
     with mp.Pool(mp.cpu_count()) as pool:
         results = pool.map(sim_spread, [graph] * num_sim)
-    print("It took {} seconds".format(time.time() - t))
+
+    print(": Optimal seed set size found in {} seconds".format(time.time() - t))
     avg = sum(results) / len(results)
     return avg
 
@@ -27,10 +29,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Multi-process optsize")
     parser.add_argument("-n", "--number", type=int, default=100,
                         help="Number of simulation.")
-    parser.add_argument('--small', default=False, action="store_true",
-                        help="Whether to use the small graph or the big one.")
-    parser.add_argument("--model", default="WC", help="Model to use")
-    parser.add_argument("--file", default="hep_WC",
+    parser.add_argument('-m', '--model', default="WC", help="Model to use")
+    parser.add_argument('-f', '--file', default="hep_wc",
                         help="File name to choose graph from")
     args = parser.parse_args()
 
@@ -40,20 +40,19 @@ if __name__ == "__main__":
 
     # Here are available:
     #  - args.number: (int) The  number of simulation
-    #  - args.small: (bool) Whether to use the small graph or the big one
     #  - args.model: (string) The model to use
 
+    print("-------------------------------------------------------------------")
     msg = "Searching for optimal seed set size of graph [{} simulations] \n"
     msg += "Use model: {}"
     print(msg.format(args.number, args.model))
+    print("---")
 
     graph = {}
-    if args.small:
-        graph = research_data.small_graph_data(args.model)
-    else:
-        graph = research_data.big_graph_data(args.file, args.model)
+    graph, _ = research_data.import_graph_data(args.file, args.model)
 
     opt_size = round(find_opt_seed_size(graph,
                                         args.number))
+    print("---")
     print("Optimal seed size is {}".format(opt_size))
     num_seed_sets(len(graph.keys()), int(opt_size))
