@@ -8,7 +8,7 @@
 '''
 import csv
 from multiprocessing import Process, Queue, Lock, cpu_count
-from MonteCarlo import monte_carlo_inf_score_est
+from monte_carlo import monte_carlo_inf_score_est
 import argparse
 import research_data
 
@@ -138,29 +138,23 @@ if __name__ == "__main__":
         second argument is file or database name to define data to use
     '''
     parser = argparse.ArgumentParser(description="Multi-process optsize")
-    parser.add_argument('--small', default=False, action="store_true",
-                        help="Whether to use the small graph or the big one.")
+    parser.add_argument('-f', '--file', default="hep_wc",
+                        help="File name to choose graph from")
     parser.add_argument("--model", default="WC", help="Model to use")
     args = parser.parse_args()
 
+    print("-------------------------------------------------------------------")
     if args.model not in research_data.valid_models():
         msg = "Invalid arguments [model] -> Received: {}"
         raise Exception(msg.format(args.model))
 
-    graph_size = ""
-    if args.small:
-        graph_size = "small"
-    else:
-        graph_size = "large"
+    msg = "Pre-processing graph using RTIM\n"
+    msg += "Use model: {}".format(args.model)
+    print(msg)
 
-    msg = "Pre-processing {} graph using RTIM\n"
-    msg += "Use model: {}"
-    print(msg.format(graph_size, args.model))
-
+    print("---")
     graph = {}
-    if args.small:
-        graph = research_data.small_graph_data()
-    else:
-        graph = research_data.big_graph_data(args.model)
+    graph, _ = research_data.import_graph_data(args.file, args.model)
 
     manage_processes(graph)
+    print("---")
