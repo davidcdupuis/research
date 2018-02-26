@@ -13,6 +13,7 @@ import time
 import argparse
 import research_data
 import csv
+import random
 
 THETA_AP = 0.8
 
@@ -31,18 +32,11 @@ def inf_scores_graph(graph, values, num_sim=10000):
     print(msg.format(time.time() - t))
 
 
-def target(node):
+def target(node, values, theta_inf):
     ''' Decide whether to target a node or not '''
-    if graph[node]['ap'] > THETA_AP or graph[node]['inf'] < theta_inf:
+    if values[node]['ap'] > THETA_AP or values[node]['inf'] < theta_inf:
         return False
     return True
-
-
-def update_ap(graph, node):
-    '''
-        Updates the activation probability of neighboring nodes
-    '''
-    pass
 
 
 def inf_score_array(values):
@@ -66,12 +60,12 @@ def inf_threshold_index(inf_score_array, top=20):
     return index
 
 
-def update_ap(graph, node):
+def update_ap(graph, node, values):
     '''
         Updates activation probability of neighbors when considering node
         as activated
     '''
-    pass
+    return values
 
 
 def save_inf_scores(graph_values, file_name="results.csv"):
@@ -82,6 +76,57 @@ def save_inf_scores(graph_values, file_name="results.csv"):
             line = [key, graph_values[key]['inf']]
             writer.writerow(line)
     print(": Successfully saved influence scores")
+
+def run_pre_processing(graph):
+    '''
+        Runs pre-processing part of RTIM
+        returns graph_values with [inf, ap], as well as influence_threshold
+    '''
+    pass
+
+def run_live(graph):
+    '''
+        Runs live part of RTIM
+    '''
+    pass
+
+def run_full(graph, preProc=True, live=True, inf_thresh=0):
+    '''
+        Runs full RTIM experimentation
+        Returns final targeted seed set
+    '''
+    print("---")
+    keys = graph.keys()
+    graph_values = {}
+    seed = set()
+    if inf_thresh != 0:
+        theta_inf = inf_thresh
+    elif preProc == False:
+        print('''> Influence threshold must be specified if
+                pre-processing is not run!''')
+
+    # launch rtim pre-processing
+    if preProc:
+        print("> RTIM is Pre-Processing!")
+        # compute influence scores
+        for node in graph.keys():
+            graph_values[node] = {'inf': 0, 'ap': 0}
+    else:
+        # import influence scores from csv file
+        research_data.import_inf_scores_csv('results.csv', graph_values)
+
+    # launch rtim live
+    if live:
+        print("> RTIM is Live!")
+        lim = len(keys) # select as many users as there are in graph
+        for i in range(lim):
+            online_user = random.sample(keys, 1)[0]
+            if target(online_user, graph_values, theta_inf):
+                seed.append(online_user)
+                graph_values[online_user]['inf'] = 1.0
+                update_ap(graph, online_user, graph_values)
+
+    return seed
 
 
 if __name__ == "__main__":
@@ -99,9 +144,9 @@ if __name__ == "__main__":
         msg = "Invalid arguments [model] -> Received: {}"
         raise Exception(msg.format(args.model))
 
-    msg = "Pre-processing graph using RTIM\n"
-    msg += "Use model: {}".format(args.model)
-    print(msg)
+    print("-------------------------------------------------------------------")
+    print("Importing [{}]".format(args.file))
+    print("Model [{}]".format(args.model))
 
     print("---")
     graph = {}
