@@ -8,12 +8,13 @@
 '''
 
 import multiprocessing as mp
-from monte_carlo import random_walk
+from monte_carlo import random_walk, monte_carlo_inf_score_est
 import time
 import argparse
 import research_data
 import csv
 import random
+from rtim_queue import manage_processes
 
 THETA_AP = 0.8
 NODES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
@@ -104,18 +105,50 @@ def save_inf_scores(graph_values, file_name="results.csv"):
             writer.writerow(line)
     print(": Successfully saved influence scores")
 
-def run_pre_processing(graph):
+
+def run_pre_processing(graph, graph_values, inf=True):
     '''
         Runs pre-processing part of RTIM
         returns graph_values with [inf, ap], as well as influence_threshold
+        Compute and save influence scores if inf = True
     '''
-    pass
+    print("> RTIM is Pre-Processing!")
+    if inf:
+        inf_scores_graph(graph, graph_values)
+        save_inf_scores(graph_values)
 
-def run_live(graph):
+    research_data.import_inf_scores_csv('results.csv', graph_values)
+    inf_scores = inf_score_array(graph_values)
+    theta_inf_index = int(inf_threshold_index(inf_scores))
+    theta_inf = inf_scores[theta_inf_index]
+    print("> Influence threshold computed!")
+
+
+def run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores):
     '''
         Runs live part of RTIM
     '''
-    pass
+    keys = graph.keys()
+    seed = set()
+    print("> RTIM is Live!")
+    lim = len(keys) # select as many users as there are in graph
+    for i in range(lim):
+        online_user = random.sample(keys, 1)[0]
+        # print("> Online user is {}".format(NODES[online_user-1]))
+        if target(online_user, graph_values, theta_inf):
+            # print("Targeting {}".format(NODES[online_user-1]))
+            # add user to seed set
+            seed.add(online_user)
+            # update targeted user's ap as well as neighbor of max depth 3
+            graph_values[online_user]['ap'] = 1.0
+            update_neighbors_ap(graph, online_user, graph_values)
+            # update influence threshold
+            theta_inf_index -= 1
+            theta_inf = inf_scores[theta_inf_index]
+            # print("New inf threshold: {}".format(theta_inf))
+    print(": RTIM Live Over!")
+    return seed
+
 
 def run_full(graph, preProc=True, live=True, inf_thresh=0):
     '''
@@ -123,9 +156,8 @@ def run_full(graph, preProc=True, live=True, inf_thresh=0):
         Returns final targeted seed set
     '''
     print("---")
-    keys = graph.keys()
     graph_values = {}
-    seed = set()
+
     if inf_thresh != 0:
         theta_inf = inf_thresh
     elif preProc == False:
@@ -134,26 +166,13 @@ def run_full(graph, preProc=True, live=True, inf_thresh=0):
 
     # launch rtim pre-processing
     if preProc:
-        print("> RTIM is Pre-Processing!")
-        # compute influence scores
-        for node in graph.keys():
-            graph_values[node] = {'inf': 0, 'ap': 0}
-    else:
-        # import influence scores from csv file
-        research_data.import_inf_scores_csv('results.csv', graph_values)
+        run_pre_processing(graph, graph_values)
 
     # launch rtim live
     if live:
-        print("> RTIM is Live!")
-        lim = len(keys) # select as many users as there are in graph
-        for i in range(lim):
-            online_user = random.sample(keys, 1)[0]
-            if target(online_user, graph_values, theta_inf):
-                seed.append(online_user)
-                graph_values[online_user]['ap'] = 1.0
-                update_ap(graph, online_user, graph_values)
-
-    return seed
+        return run_live(graph, graph_values, theta_inf)
+    elif preProc:
+        print("Pre-processing finished running without live process")
 
 
 if __name__ == "__main__":
@@ -165,6 +184,10 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--file', default="hep_wc",
                         help="File name to choose graph from", required=True)
     parser.add_argument("--model", default="WC", help="Model to use")
+    # parser.add_argument("--preProc", default=True, action="store_true",
+    #                     help="Whether you want to RTIM pre-process")
+    # parser.add_argument("--live", default=True,
+    #                     help="Whether you want to run RTIM live")
     args = parser.parse_args()
 
     if args.model not in research_data.valid_models():
@@ -174,6 +197,8 @@ if __name__ == "__main__":
     print("-------------------------------------------------------------------")
     print("Importing [{}]".format(args.file))
     print("Model [{}]".format(args.model))
+    # print("RTIM Pre-Process [{}]".format(args.preProc))
+    # print("RTIM Live [{}]".format(args.live))
 
     print("---")
     graph = {}
@@ -185,26 +210,20 @@ if __name__ == "__main__":
 
     # inf_scores_graph(graph, graph_values)
     # save_inf_scores(graph_values)
+    # manage_processes(graph)
 
     research_data.import_inf_scores_csv('results.csv', graph_values)
     # print(graph_values)
     inf_scores = inf_score_array(graph_values)
 
-    # if len(graph.keys()) < 30:
-    #     print(graph_values)
-    #     print("")
-    #     print(inf_scores)
-
-    # theta_inf_index = int(inf_threshold_index(inf_scores))
-    # theta_inf = inf_scores[theta_inf_index]
+    theta_inf_index = int(inf_threshold_index(inf_scores))
+    theta_inf = inf_scores[theta_inf_index]
     # msg = "Influence threshold index {}, value {}"
     # print(msg.format(theta_inf_index, theta_inf))
 
-    print("-")
-    graph_values[1]['ap'] = 1.0
-    update_neighbors_ap(graph, 1, graph_values)
-    print("Finished updating activation probabilities")
-    print("-")
-    print(graph_values)
-
+    seed = set()
+    seed = run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores)
     print("---")
+    
+    inf_spread = monte_carlo_inf_score_est(graph, seed)
+    print("Influence spread of seed set is {}".format(inf_spread))
