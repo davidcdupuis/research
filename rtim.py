@@ -16,6 +16,8 @@ import csv
 import random
 
 THETA_AP = 0.8
+NODES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O','P','Q', 'R', 'S', 'T']
 
 def inf_scores_graph(graph, values, num_sim=10000):
     ''' Compute the influence score of all the nodes in the graph '''
@@ -65,23 +67,32 @@ def update_ap(node, new_path_weight, values):
         Update node's activation probability
     '''
     values[node]['ap'] = 1 - (1 - values[node]['ap']) * (1 - new_path_weight)
+    # msg = ">> Updated activation probability of {}({}): {}"
+    # print(msg.format(node, NODES[node-1], values[node]['ap']))
 
 
-def update_neighbors_ap(graph, node, values, path=1 ,depth=3):
+def update_neighbors_ap(graph, node, values, path_nodes=[], path_weight=1,
+                        depth=3):
     '''
         Updates activation probability of neighbors when considering node
         as activated
         Recursive function
     '''
     # explore each neighbor
+    path_nodes.append(node)
+    # print("> At node {}, path_nodes {}".format(NODES[node-1], path_nodes))
     for neighbor in graph[node].keys():
         # check if the neighbor has not already been visited on this path
         # to avoid cycles
-        # update the ap of the neighbor with edge weight
-        new_path = path * graph[node][neighbor]
-        update_ap(neighbor, new_path, depth - 1)
-        if depth > 0:
-            update_neighbors_ap(graph, neighbor, values, new_path, depth - 1)
+        if neighbor not in path_nodes:
+            # update the ap of the neighbor with edge weight
+            new_path_weight = path_weight * graph[node][neighbor]
+            update_ap(neighbor, new_path_weight, values)
+            # if depth is not maxed out keep exploring
+            if depth > 1:
+                update_neighbors_ap(graph, neighbor, values, path_nodes,
+                                    new_path_weight, depth - 1)
+    path_nodes.remove(node)
 
 
 def save_inf_scores(graph_values, file_name="results.csv"):
@@ -139,7 +150,7 @@ def run_full(graph, preProc=True, live=True, inf_thresh=0):
             online_user = random.sample(keys, 1)[0]
             if target(online_user, graph_values, theta_inf):
                 seed.append(online_user)
-                graph_values[online_user]['inf'] = 1.0
+                graph_values[online_user]['ap'] = 1.0
                 update_ap(graph, online_user, graph_values)
 
     return seed
@@ -176,7 +187,7 @@ if __name__ == "__main__":
     # save_inf_scores(graph_values)
 
     research_data.import_inf_scores_csv('results.csv', graph_values)
-    print(graph_values)
+    # print(graph_values)
     inf_scores = inf_score_array(graph_values)
 
     # if len(graph.keys()) < 30:
@@ -184,9 +195,16 @@ if __name__ == "__main__":
     #     print("")
     #     print(inf_scores)
 
-    theta_inf_index = int(inf_threshold_index(inf_scores))
-    theta_inf = inf_scores[theta_inf_index]
+    # theta_inf_index = int(inf_threshold_index(inf_scores))
+    # theta_inf = inf_scores[theta_inf_index]
+    # msg = "Influence threshold index {}, value {}"
+    # print(msg.format(theta_inf_index, theta_inf))
+
+    print("-")
+    graph_values[1]['ap'] = 1.0
+    update_neighbors_ap(graph, 1, graph_values)
+    print("Finished updating activation probabilities")
+    print("-")
+    print(graph_values)
 
     print("---")
-    msg = "Influence threshold index {}, value {}"
-    print(msg.format(theta_inf_index, theta_inf))
