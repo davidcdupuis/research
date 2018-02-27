@@ -8,7 +8,7 @@ def import_graph_data(fname, model="WC"):
         62,796 edges
     '''
     print("> Importing data from {}".format(fname))
-    file_name = 'data/' + fname
+    file_name = 'data/{0}/{0}_wc.inf'.format(fname)
     inf_network = {}
     conditions = []
     condict = {}

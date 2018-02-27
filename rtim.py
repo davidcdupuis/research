@@ -96,8 +96,9 @@ def update_neighbors_ap(graph, node, values, path_nodes=[], path_weight=1,
     path_nodes.remove(node)
 
 
-def save_inf_scores(graph_values, file_name="results.csv"):
+def save_inf_scores(graph_values, fname, model):
     print("> Saving influence scores to results.csv")
+    file_name = "data/{0}/{0}_{1}_inf_scores.csv".format(fname, model.lower())
     with open(file_name, "w", newline='') as f:
         writer = csv.writer(f)
         for key in graph_values.keys():
@@ -105,6 +106,19 @@ def save_inf_scores(graph_values, file_name="results.csv"):
             writer.writerow(line)
     print(": Successfully saved influence scores")
 
+def save_seed(seeds, inf_spread, dataset, model, series='1'):
+    '''
+        Save seed set to csv file,
+        Save influence spread as well
+    '''
+    file_name = "data/{0}/seeds/{0}_{1}_s{2}.csv"
+    file_name = file_name.format(dataset, model.lower(), series)
+    with open(file_name, "w", newline='') as f:
+        writer = csv.writer(f, delimiter=' ')
+        writer.writerow(["influence_spread:", inf_spread])
+        for seed in seeds:
+            writer.writerow([seed])
+    print("> Seed set saved.")
 
 def run_pre_processing(graph, graph_values, inf=True):
     '''
@@ -181,9 +195,11 @@ if __name__ == "__main__":
         second argument is file or database name to define data to use
     '''
     parser = argparse.ArgumentParser(description="Multi-process optsize")
-    parser.add_argument('-f', '--file', default="hep_wc",
-                        help="File name to choose graph from", required=True)
+    parser.add_argument('-f', '--file', default="hep",
+                        help="File name to choose graph from")
     parser.add_argument("--model", default="WC", help="Model to use")
+    parser.add_argument("--series", default="1",
+                        help="What random series to use in live process")
     # parser.add_argument("--preProc", default=True, action="store_true",
     #                     help="Whether you want to RTIM pre-process")
     # parser.add_argument("--live", default=True,
@@ -209,10 +225,12 @@ if __name__ == "__main__":
         graph_values[node] = {'inf': 0, 'ap': 0}
 
     # inf_scores_graph(graph, graph_values)
-    # save_inf_scores(graph_values)
+    # save_inf_scores(graph_values, args.file, args.model)
     # manage_processes(graph)
 
-    research_data.import_inf_scores_csv('results.csv', graph_values)
+    fname = 'data/{0}/{0}_{1}_inf_scores.csv'
+    fname = fname.format(args.file, args.model.lower())
+    research_data.import_inf_scores_csv(fname, graph_values)
     # print(graph_values)
     inf_scores = inf_score_array(graph_values)
 
@@ -224,6 +242,7 @@ if __name__ == "__main__":
     seed = set()
     seed = run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores)
     print("---")
-    
+
     inf_spread = monte_carlo_inf_score_est(graph, seed)
     print("Influence spread of seed set is {}".format(inf_spread))
+    save_seed(seed, inf_spread, args.file, args.model, args.series)

@@ -50,10 +50,11 @@ class Writer(Process):
 
     def __init__(self, queue):
         self._queue = queue
+        self.results_dir = "results.csv"
         super(Writer, self).__init__()
 
     def run(self):
-        with open("results.csv", "w", newline='') as f:
+        with open(self.results_dir, "w", newline='') as f:
             writer = csv.writer(f)
             while True:
                 line = self._queue.get()
@@ -87,7 +88,7 @@ class Worker(Process):
             self._result_queue.put([node, res])
 
 
-def manage_processes(graph):
+def manage_processes(graph, fname, model):
     """Launch process for computation.
 
     Launch:
@@ -108,6 +109,8 @@ def manage_processes(graph):
     # Instantiate and start result writer
     result_queue = Queue()
     writer = Writer(result_queue)
+    temp = "data/{0}/{0}_{1}_inf_scores.csv"
+    writer.results_dir = temp.format(fname, model.lower())
     writer.start()
 
     # Instantiate  workers
@@ -138,8 +141,8 @@ if __name__ == "__main__":
         second argument is file or database name to define data to use
     '''
     parser = argparse.ArgumentParser(description="Multi-process optsize")
-    parser.add_argument('-f', '--file', default="hep_wc",
-                        help="File name to choose graph from", required=True)
+    parser.add_argument('-f', '--file', default="hep",
+                        help="File name to choose graph from")
     parser.add_argument("--model", default="WC", help="Model to use")
     args = parser.parse_args()
 
@@ -156,5 +159,5 @@ if __name__ == "__main__":
     graph = {}
     graph, _ = research_data.import_graph_data(args.file, args.model)
 
-    manage_processes(graph)
+    manage_processes(graph, args.file, args.model.lower())
     print("---")
