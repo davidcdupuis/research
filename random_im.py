@@ -29,7 +29,6 @@ def run_live():
         for line in reader:
             user = int(line[0])
             if target():
-                print("Targeting {}".format(user))
                 seed.add(user)
     return seed
 

@@ -138,28 +138,28 @@ def run_pre_processing(graph, graph_values, inf=True):
     print("> Influence threshold computed!")
 
 
-def run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores):
+def run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores,
+            dataset):
     '''
         Runs live part of RTIM
     '''
     keys = graph.keys()
     seed = set()
     print("> RTIM is Live!")
-    lim = len(keys) # select as many users as there are in graph
-    for i in range(lim):
-        online_user = random.sample(keys, 1)[0]
-        # print("> Online user is {}".format(NODES[online_user-1]))
-        if target(online_user, graph_values, theta_inf):
-            # print("Targeting {}".format(NODES[online_user-1]))
-            # add user to seed set
-            seed.add(online_user)
-            # update targeted user's ap as well as neighbor of max depth 3
-            graph_values[online_user]['ap'] = 1.0
-            update_neighbors_ap(graph, online_user, graph_values)
-            # update influence threshold
-            theta_inf_index -= 1
-            theta_inf = inf_scores[theta_inf_index]
-            # print("New inf threshold: {}".format(theta_inf))
+    model = 'data/{0}/random_model/{0}_r0.csv'.format(dataset)
+    with open(model, 'r') as f:
+        reader = csv.reader(f)
+        for line in reader:
+            online_user = int(line[0])
+            if target(online_user, graph_values, theta_inf):
+                # add user to seed set
+                seed.add(online_user)
+                # update targeted user's ap as well as neighbor of max depth 3
+                graph_values[online_user]['ap'] = 1.0
+                update_neighbors_ap(graph, online_user, graph_values)
+                # update influence threshold
+                theta_inf_index -= 1
+                theta_inf = inf_scores[theta_inf_index]
     print(": RTIM Live Over!")
     return seed
 
@@ -240,7 +240,8 @@ if __name__ == "__main__":
     # print(msg.format(theta_inf_index, theta_inf))
 
     seed = set()
-    seed = run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores)
+    seed = run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores,
+                    args.file)
     print("---")
 
     inf_spread = monte_carlo_inf_score_est(graph, seed)
