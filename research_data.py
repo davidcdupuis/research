@@ -1,8 +1,8 @@
 def valid_models():
-    return ["WC", "0.1","0.01","0.5","0.9"]
+    return ["wc", "0.1","0.01","0.5","0.9"]
 
 
-def import_graph_data(fname, model="WC"):
+def import_graph_data(fname, model="wc"):
     ''' Hep_WC contains:
         15,233 nodes
         62,796 edges
@@ -29,7 +29,7 @@ def import_graph_data(fname, model="WC"):
                 inf_network[user1][user2] = 0.1
             elif model == "0.01":
                 inf_network[user1][user2] = 0.01
-            elif model == "WC":
+            elif model == "wc":
                 inf_network[user1][user2] = inf_score
             else:
                 raise Exception("Unknown model: {}".format(model))
