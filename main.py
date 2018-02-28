@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     if args.live and args.algorithm != 'opt_size':
         print("Launched live!")
-        for serie in series:
+        for serie in args.series:
             if args.algorithm == 'rtim':
                 rtim.run_live(graph)
             elif args.algorithm == 'random_im':
