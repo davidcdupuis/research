@@ -6,6 +6,7 @@
 
 import random
 import time
+import multiprocessing as mp
 
 
 def influenced(prob):
@@ -50,6 +51,24 @@ def random_walk(graph,  seed):
                     activated_nodes.add(neighbor)
                     q.append(neighbor)
     return activated
+
+
+def inf_score_est_mp(graph, seed, num_sim=10000, timed=False):
+    '''
+        Computes influence spread using Monte Carlo and
+        Multiprocessing
+    '''
+    print("> Computing influence spread for seed with multiprocessing")
+    t0 = time.time()
+    inf_score = 0
+    results = []
+    with mp.Pool(mp.cpu_count()) as pool:
+        results = pool.starmap(random_walk, [(graph, seed)] * num_sim)
+    inf_score = sum(results) / float(len(results))
+    if timed:
+        print(": Monte Carlo method finished computing in {} seconds".format(
+                                                round(time.time() - t0,  2)))
+    return inf_score
 
 
 if __name__ == "__main__":

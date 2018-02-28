@@ -4,7 +4,7 @@
 
 import csv
 import random
-from monte_carlo import monte_carlo_inf_score_est
+from monte_carlo import inf_score_est_mp
 import research_data
 
 
@@ -57,9 +57,9 @@ def run(graph, dataset, model, serie):
             user = int(line[0])
             if target():
                 seed.add(user)
-                
+
     print(": Finished targeting!")
-    inf_spread = monte_carlo_inf_score_est(graph, seed)
+    inf_spread = inf_score_est_mp(graph, seed)
     print("Influence spread is {}".format(inf_spread))
     save_seed(seed, inf_spread, dataset, model, serie)
     save_data(dataset, model, serie, len(seed), inf_spread)
