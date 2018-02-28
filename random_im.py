@@ -47,6 +47,7 @@ def run(graph, dataset, model, serie):
         Runs Random IM on random_model
         Save results
     '''
+    print("> Running Random IM on {}/{}/s{}".format(dataset, model, serie))
     seed = set()
     # read from random_models
     file_name = 'data/{0}/random_model/{0}_s{1}.csv'.format(dataset, serie)
@@ -56,11 +57,13 @@ def run(graph, dataset, model, serie):
             user = int(line[0])
             if target():
                 seed.add(user)
-
+                
+    print(": Finished targeting!")
     inf_spread = monte_carlo_inf_score_est(graph, seed)
     print("Influence spread is {}".format(inf_spread))
     save_seed(seed, inf_spread, dataset, model, serie)
     save_data(dataset, model, serie, len(seed), inf_spread)
+    print(": Finished running Random IM.")
 
 
 if __name__ == "__main__":

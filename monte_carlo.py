@@ -17,6 +17,7 @@ def monte_carlo_inf_score_est(graph, seed, num_sim=10000, timed=False):
         Performs num_sim influence simulations from seed on graph
         Returns Monte Carlo influence score of seed in graph
     '''
+    print("> Computing influence spread for seed")
     t0 = time.time()
     inf_score = 0
     for i in range(1,  num_sim + 1):
@@ -24,7 +25,7 @@ def monte_carlo_inf_score_est(graph, seed, num_sim=10000, timed=False):
         # update inf_score as streaming average during simulation
         inf_score = inf_score + (activated - inf_score)/float(i)
     if timed:
-        print("> Monte Carlo method finished computing in {} seconds".format(
+        print(": Monte Carlo method finished computing in {} seconds".format(
                                                 round(time.time() - t0,  2)))
     return inf_score
 

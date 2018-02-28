@@ -12,7 +12,7 @@ import research_data
 
 datasets = ['small_graph', 'hep', 'hept', 'phy']
 models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.8', '0.9']
-algorithms = ['rtim', 'random', 'opt_size']
+algorithms = ['rtim', 'random_im', 'opt_size']
 
 if __name__ == "__main__":
     parser = parser = argparse.ArgumentParser(description="Main")
@@ -65,7 +65,7 @@ if __name__ == "__main__":
             if args.algorithm == 'rtim':
                 rtim.run_live(graph)
             elif args.algorithm == 'random_im':
-                random_im.run_live(graph, args.dataset, args.model, serie)
+                random_im.run(graph, args.dataset, args.model, serie)
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")
