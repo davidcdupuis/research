@@ -33,9 +33,14 @@ if __name__ == "__main__":
     if args.dataset not in datasets:
         msg = "Invalid arguments [dataset] -> Received: {}"
         raise Exception(msg.format(args.dataset))
+
     if args.model not in models:
         msg = "Invalid arguments [model] -> Received: {}"
         raise Exception(msg.format(args.model))
+    else:
+        if args.model != 'wc':
+            args.model = float(args.model)
+
     if args.algorithm not in algorithms:
         msg = "Invalid arguments [algorithm] -> Received: {}"
         raise Exception(msg.format(args.algorithm))
@@ -54,13 +59,13 @@ if __name__ == "__main__":
 
     if (args.pre and args.algorithm != 'random_im'
         and args.algorithm != 'opt_size'):
-        print("Launched pre-processing!")
+        print("Launched {} pre-processing!".format(args.algorithm))
         for serie in series:
             if args.algorithm == 'rtim':
                 rtim.run_live(graph)
 
     if args.live and args.algorithm != 'opt_size':
-        print("Launched live!")
+        print("Launched {} live!".format(args.algorithm))
         for serie in args.series:
             if args.algorithm == 'rtim':
                 rtim.run_live(graph)
@@ -69,6 +74,4 @@ if __name__ == "__main__":
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")
-        size = optimal_size_mp.find_opt_seed_size(graph)
-        print("Optimal seed size found is: {}".format(size))
-        # code function to save data in file
+        size = optimal_size_mp.run(graph, args.dataset, args.model)

@@ -1,14 +1,21 @@
+#!/usr/bin/python3
+
+import argparse
+
+datasets = ['small_graph', 'hep', 'hept', 'phy']
+models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.8', '0.9']
+
 def valid_models():
     return ["wc", "0.1","0.01","0.5","0.9"]
 
 
-def import_graph_data(fname, model="wc"):
+def import_graph_data(dataset, model="wc"):
     ''' Hep_WC contains:
         15,233 nodes
         62,796 edges
     '''
-    print("> Importing data from {}".format(fname))
-    file_name = 'data/{0}/{0}_wc.inf'.format(fname)
+    print("> Importing data from {}".format(dataset))
+    file_name = 'data/{0}/{0}_wc.inf'.format(dataset)
     inf_network = {}
     conditions = []
     condict = {}
@@ -25,10 +32,8 @@ def import_graph_data(fname, model="wc"):
             if user2 not in inf_network:
                 inf_network[user2] = {}
 
-            if model == "0.1":
-                inf_network[user1][user2] = 0.1
-            elif model == "0.01":
-                inf_network[user1][user2] = 0.01
+            if type(model) == float:
+                inf_network[user1][user2] = model
             elif model == "wc":
                 inf_network[user1][user2] = inf_score
             else:
@@ -40,7 +45,7 @@ def import_graph_data(fname, model="wc"):
                 condict[user1] += 1
                 conditions.append((user1, user2))
 
-    print(": Done importing {}".format(fname))
+    print(": Done importing {}".format(file_name))
     num = {}
     for key in condict:
         if condict[key] not in num:
@@ -62,5 +67,30 @@ def import_inf_scores_csv(file_name, values):
             values[user]['inf'] = inf_score
     return values
 
+
 if __name__ == "__main__":
-    import_inf_scores_csv('results.csv')
+    parser = parser = argparse.ArgumentParser(description="Main")
+    parser.add_argument('-d', '--dataset', default='small_graph',
+                        help='{}'.format(datasets))
+    parser.add_argument('-m', '--model', default='wc',
+                        help='{}'.format(models))
+    args = parser.parse_args()
+
+    if args.dataset not in datasets:
+        msg = "Invalid arguments [dataset] -> Received: {}"
+        raise Exception(msg.format(args.dataset))
+    if args.model not in models:
+        msg = "Invalid arguments [model] -> Received: {}"
+    else:
+        if args.model != 'wc':
+            args.model = float(args.model)
+
+    print("-------- Parameters --------")
+    print("Dataset \t [{}]".format(args.dataset))
+    print("Model \t\t [{}], type [{}]".format(args.model, type(args.model)))
+    print("----------------------------")
+
+    graph, _ = import_graph_data(args.dataset, args.model)
+    if args.dataset == 'small_graph':
+        print(graph)
+    # import_inf_scores_csv('results.csv')

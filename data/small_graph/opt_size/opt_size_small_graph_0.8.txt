@@ -1,0 +1,6 @@
+Dataset: small_graph
+Model: 0.8
+Simulations: 10000
+Runtime: 0
+Optimal size found: 6.1819
+Optimal seed set size: 6
