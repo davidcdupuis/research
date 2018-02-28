@@ -140,7 +140,7 @@ if __name__ == "__main__":
         pass argument to test RTIM with Python dic or Neo4J database
         second argument is file or database name to define data to use
     '''
-    parser = argparse.ArgumentParser(description="Multi-process optsize")
+    parser = argparse.ArgumentParser(description="RTIM Queue")
     parser.add_argument('-f', '--file', default="hep",
                         help="File name to choose graph from")
     parser.add_argument("--model", default="WC", help="Model to use")

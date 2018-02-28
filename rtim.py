@@ -17,6 +17,7 @@ import random
 from rtim_queue import manage_processes
 
 theta_ap = 0.8
+preProc_time = -1
 NODES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
         'O','P','Q', 'R', 'S', 'T']
 
@@ -127,6 +128,7 @@ def run_pre_processing(graph, graph_values, inf=True):
         Compute and save influence scores if inf = True
     '''
     print("> RTIM is Pre-Processing!")
+    t0 = time.time()
     if inf:
         inf_scores_graph(graph, graph_values)
         save_inf_scores(graph_values)
@@ -135,7 +137,10 @@ def run_pre_processing(graph, graph_values, inf=True):
     inf_scores = inf_score_array(graph_values)
     theta_inf_index = int(inf_threshold_index(inf_scores))
     theta_inf = inf_scores[theta_inf_index]
-    print("> Influence threshold computed!")
+    t1 = time.time()
+    t = t1 - t0
+    print("> Influence threshold computed in {} seconds".format(t))
+    preProc_time = t
 
 
 def run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores,
@@ -189,12 +194,34 @@ def run_full(graph, preProc=True, live=True, inf_thresh=0):
         print("Pre-processing finished running without live process")
 
 
+def save_data(dataset, model, seed_size, seed_spread, theta_ap, top,
+              av_model, av_dataset, preProc):
+    '''
+        Save data to txt file
+    '''
+    file_name = 'data/{0}/results/{0}_{1}_s{2}.txt'
+    file_name = file_name.format(dataset, model, av_dataset)
+    with open(file_name, 'w') as f:
+        f.write('RTIM processing data')
+        f.write('Dataset: {}'.format(dataset))
+        f.write('Dataset model: {}'.format(model))
+        temp = 'User availability dataset: {0}_r{1}.csv'
+        f.write(temp.format(dataset, av_dataset))
+        f.write('User availability model: {}'.format(av_model))
+        f.write('Influence Threshold top tier: {}%'.format(top))
+        f.write('Activation probability threshold: {}'.format(theta_ap))
+        f.write('Pre-Processing time: {} seconds'.format(preProc))
+        f.write('Seed size: {}'.format(seed_size))
+        f.write('Seed spread: {}'.format(seed_spread))
+    print('> Saved RTIM results!')
+
+
 if __name__ == "__main__":
     '''
         pass argument to test RTIM with Python dic or Neo4J database
         second argument is file or database name to define data to use
     '''
-    parser = argparse.ArgumentParser(description="Multi-process optsize")
+    parser = argparse.ArgumentParser(description="RTIM")
     parser.add_argument('-f', '--file', default="hep",
                         help="File name to choose graph from")
     parser.add_argument("--model", default="WC", help="Model to use")
@@ -255,3 +282,6 @@ if __name__ == "__main__":
     inf_spread = monte_carlo_inf_score_est(graph, seed)
     print("Influence spread of seed set is {}".format(inf_spread))
     save_seed(seed, inf_spread, args.file, args.model, args.series)
+
+    save_data(args.file, args.model, len(seed), inf_spread, theta_ap, args.inf,
+              'random_basic', 0, preProc_time)
