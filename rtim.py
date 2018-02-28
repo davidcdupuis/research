@@ -8,7 +8,7 @@
 '''
 
 import multiprocessing as mp
-from monte_carlo import random_walk, monte_carlo_inf_score_est
+from monte_carlo import random_walk, inf_score_est_mp
 import time
 import argparse
 import research_data
@@ -279,7 +279,7 @@ if __name__ == "__main__":
                     args.file)
     print("---")
 
-    inf_spread = monte_carlo_inf_score_est(graph, seed)
+    inf_spread = inf_score_est_mp(graph, seed)
     print("Influence spread of seed set is {}".format(inf_spread))
     save_seed(seed, inf_spread, args.file, args.model, args.series)
 
