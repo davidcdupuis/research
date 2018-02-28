@@ -14,7 +14,7 @@ models = ['random_basic', 'random_decay', 'random_long']
 def basic_generator(dataset, nodes, num=1):
     '''
         - As many choices as there are users
-        - Repetition is possible 
+        - Repetition is possible
     '''
     for i in range(num):
         file_name = 'data/{0}/random_model/{0}_r{1}.csv'.format(dataset, i)
@@ -27,10 +27,12 @@ def basic_generator(dataset, nodes, num=1):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Live Models generator")
-    parser.add_argument('-m','--model', default="random_basic",
+    parser.add_argument('-m', '--model', default="random_basic",
                         help='What model to use')
-    parser.add_argument('-d','--dataset', required=True,
+    parser.add_argument('-d', '--dataset', required=True,
                         help='What data to generate model for.')
+    parser.add_argument('-n', '--number', type=int,
+                        help='How many random datasets you want')
     args = parser.parse_args()
 
     print("Model [{}]".format(args.model))
@@ -40,4 +42,4 @@ if __name__ == "__main__":
     keys = graph.keys()
 
     if args.model == "random_basic":
-        basic_generator(args.dataset, keys)
+        basic_generator(args.dataset, keys, args.number)

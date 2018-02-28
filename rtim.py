@@ -16,7 +16,7 @@ import csv
 import random
 from rtim_queue import manage_processes
 
-THETA_AP = 0.8
+theta_ap = 0.8
 NODES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
         'O','P','Q', 'R', 'S', 'T']
 
@@ -37,7 +37,7 @@ def inf_scores_graph(graph, values, num_sim=10000):
 
 def target(node, values, theta_inf):
     ''' Decide whether to target a node or not '''
-    if values[node]['ap'] > THETA_AP or values[node]['inf'] < theta_inf:
+    if values[node]['ap'] > theta_ap or values[node]['inf'] < theta_inf:
         return False
     return True
 
@@ -200,6 +200,10 @@ if __name__ == "__main__":
     parser.add_argument("--model", default="WC", help="Model to use")
     parser.add_argument("--series", default="1",
                         help="What random series to use in live process")
+    parser.add_argument('--ap', default=0.8, type=float,
+                        help='Define theta_ap: activation prob threshold')
+    parser.add_argument('--inf', default=20, type=int,
+                        help='Define theta_inf: inf score top tier threshold')
     # parser.add_argument("--preProc", default=True, action="store_true",
     #                     help="Whether you want to RTIM pre-process")
     # parser.add_argument("--live", default=True,
@@ -213,6 +217,10 @@ if __name__ == "__main__":
     print("-------------------------------------------------------------------")
     print("Importing [{}]".format(args.file))
     print("Model [{}]".format(args.model))
+    print("Theta_ap [{}]".format(args.ap))
+    print("Theta_inf [{}]".format(args.inf))
+
+    theta_ap = args.ap
     # print("RTIM Pre-Process [{}]".format(args.preProc))
     # print("RTIM Live [{}]".format(args.live))
 
@@ -234,7 +242,7 @@ if __name__ == "__main__":
     # print(graph_values)
     inf_scores = inf_score_array(graph_values)
 
-    theta_inf_index = int(inf_threshold_index(inf_scores))
+    theta_inf_index = int(inf_threshold_index(inf_scores, args.inf))
     theta_inf = inf_scores[theta_inf_index]
     # msg = "Influence threshold index {}, value {}"
     # print(msg.format(theta_inf_index, theta_inf))
