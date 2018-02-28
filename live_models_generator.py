@@ -17,7 +17,7 @@ def basic_generator(dataset, nodes, num=1):
         - Repetition is possible
     '''
     for i in range(num):
-        file_name = 'data/{0}/random_model/{0}_r{1}.csv'.format(dataset, i)
+        file_name = 'data/{0}/random_model/{0}_s{1}.csv'.format(dataset, i)
         with open(file_name, 'w', newline='') as f:
             writer = csv.writer(f)
             for _ in range(len(nodes)):

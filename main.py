@@ -65,7 +65,7 @@ if __name__ == "__main__":
             if args.algorithm == 'rtim':
                 rtim.run_live(graph)
             elif args.algorithm == 'random_im':
-                random_im.run_live(graph)
+                random_im.run_live(graph, args.dataset, args.model, serie)
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")

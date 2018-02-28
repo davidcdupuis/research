@@ -107,12 +107,12 @@ def save_inf_scores(graph_values, fname, model):
             writer.writerow(line)
     print(": Successfully saved influence scores")
 
-def save_seed(seeds, inf_spread, dataset, model, series='1'):
+def save_seed(seeds, inf_spread, dataset, model, series='0'):
     '''
         Save seed set to csv file,
         Save influence spread as well
     '''
-    file_name = "data/{0}/seeds/{0}_{1}_s{2}.csv"
+    file_name = "data/{0}/rtim/seeds/{0}_{1}_s{2}.csv"
     file_name = file_name.format(dataset, model.lower(), series)
     with open(file_name, "w", newline='') as f:
         writer = csv.writer(f, delimiter=' ')
@@ -199,20 +199,20 @@ def save_data(dataset, model, seed_size, seed_spread, theta_ap, top,
     '''
         Save data to txt file
     '''
-    file_name = 'data/{0}/results/{0}_{1}_s{2}.txt'
+    file_name = 'data/{0}/rtim/results/{0}_{1}_s{2}.txt'
     file_name = file_name.format(dataset, model, av_dataset)
     with open(file_name, 'w') as f:
-        f.write('RTIM processing data')
-        f.write('Dataset: {}'.format(dataset))
-        f.write('Dataset model: {}'.format(model))
-        temp = 'User availability dataset: {0}_r{1}.csv'
+        f.write('RTIM processing data\n')
+        f.write('Dataset: {}\n'.format(dataset))
+        f.write('Dataset model: {}\n'.format(model))
+        temp = 'User availability dataset: {0}_r{1}.csv\n'
         f.write(temp.format(dataset, av_dataset))
-        f.write('User availability model: {}'.format(av_model))
-        f.write('Influence Threshold top tier: {}%'.format(top))
-        f.write('Activation probability threshold: {}'.format(theta_ap))
-        f.write('Pre-Processing time: {} seconds'.format(preProc))
-        f.write('Seed size: {}'.format(seed_size))
-        f.write('Seed spread: {}'.format(seed_spread))
+        f.write('User availability model: {}\n'.format(av_model))
+        f.write('Influence Threshold top tier: {}%\n'.format(top))
+        f.write('Activation probability threshold: {}\n'.format(theta_ap))
+        f.write('Pre-Processing time: {} seconds\n'.format(preProc))
+        f.write('Seed size: {}\n'.format(seed_size))
+        f.write('Seed spread: {}\n'.format(seed_spread))
     print('> Saved RTIM results!')
 
 
