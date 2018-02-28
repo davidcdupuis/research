@@ -13,7 +13,7 @@ def find_opt_seed_size(graph, num_sim):
     '''
         Returns optimal seed size for graph
     '''
-    print("> Searchinf for optimal seed set size")
+    print("> Searching for optimal seed set size")
     t = time.time()
     results = []
     with mp.Pool(mp.cpu_count()) as pool:
