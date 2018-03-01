@@ -12,11 +12,11 @@ def target():
     return random.random() > 0.5
 
 
-def save_data(dataset, model, serie, seed_size, seed_spread):
+def save_data(algorithm, dataset, model, serie, seed_size, seed_spread):
     '''
     '''
-    file_name = 'data/{0}/random_im/results/random_im_{0}_{1}_s{2}_results.txt'
-    file_name = file_name.format(dataset, model, serie)
+    file_name = 'data/{0}/{1}/results/{1}_{0}_{2}_s{3}_results.txt'
+    file_name = file_name.format(dataset, algorithm, model, serie)
     with open(file_name, 'w') as f:
         f.write('Random IM processing data\n')
         tmp = 'User availability model: {0}_s{1}.csv\n'
@@ -27,13 +27,13 @@ def save_data(dataset, model, serie, seed_size, seed_spread):
     print('> Saved Random IM data to results')
 
 
-def save_seed(seeds, inf_spread, dataset, model, serie='0'):
+def save_seed(algorithm, seeds, inf_spread, dataset, model, serie='0'):
     '''
         Save seed set to csv file,
         Save influence spread as well
     '''
-    file_name = "data/{0}/random_im/seeds/{0}_{1}_s{2}_seeds.csv"
-    file_name = file_name.format(dataset, model, serie)
+    file_name = "data/{0}/{1}/seeds/{1}_{0}_{2}_s{3}_seeds.csv"
+    file_name = file_name.format(dataset, algorithm, model, serie)
     with open(file_name, "w", newline='') as f:
         writer = csv.writer(f, delimiter=' ')
         writer.writerow(["influence_spread:", inf_spread])
@@ -42,10 +42,11 @@ def save_seed(seeds, inf_spread, dataset, model, serie='0'):
     print("> Seed set saved.")
 
 
-def run(graph, dataset, model, serie):
+def run(graph, dataset, model, serie, max_size=float('inf')):
     '''
         Runs Random IM on random_model
         Save results
+        max_size = IM budget/numbers of users that can be targeted
     '''
     print("> Running Random IM on {}/{}/s{}".format(dataset, model, serie))
     seed = set()
@@ -55,16 +56,39 @@ def run(graph, dataset, model, serie):
         reader = csv.reader(f)
         for line in reader:
             user = int(line[0])
-            if target():
+            if target() and len(seed) <= max_size:
                 seed.add(user)
 
     print(": Finished targeting!")
     inf_spread = inf_score_est_mp(graph, seed)
     print("Influence spread is {}".format(inf_spread))
-    save_seed(seed, inf_spread, dataset, model, serie)
-    save_data(dataset, model, serie, len(seed), inf_spread)
+    save_seed('rand_repeat', seed, inf_spread, dataset, model, serie)
+    save_data('rand_repeat', dataset, model, serie, len(seed), inf_spread)
     print(": Finished running Random IM.")
 
+def run_non_repeat(graph, dataset, model, serie, max_size=float('inf')):
+    '''
+        Runs Random IM with non repeat property: it doesn't retarget a user
+        that has already been targeted
+        max_size = number of users that can be targeted
+    '''
+    print("> Running Random IM on {}/{}/s{}".format(dataset, model, serie))
+    seed = set()
+    # read from random_models
+    file_name = 'data/{0}/random_model/{0}_s{1}.csv'.format(dataset, serie)
+    with open(file_name, 'r') as f:
+        reader = csv.reader(f)
+        for line in reader:
+            user = int(line[0])
+            if target() and user not in seed and len(seed) <= max_size:
+                seed.add(user)
+
+    print(": Finished targeting!")
+    inf_spread = inf_score_est_mp(graph, seed)
+    print("Influence spread is {}".format(inf_spread))
+    save_seed('rand_no_repeat', seed, inf_spread, dataset, model, serie)
+    save_data('rand_no_repeat', dataset, model, serie, len(seed), inf_spread)
+    print(": Finished running Random IM.")
 
 if __name__ == "__main__":
     graph = {}
