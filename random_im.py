@@ -42,7 +42,7 @@ def save_seed(algorithm, seeds, inf_spread, dataset, model, serie='0'):
     print("> Seed set saved.")
 
 
-def run(graph, dataset, model, serie, max_size=float('inf')):
+def run_repeat(graph, dataset, model, serie, max_size=float('inf')):
     '''
         Runs Random IM on random_model
         Save results
@@ -66,7 +66,7 @@ def run(graph, dataset, model, serie, max_size=float('inf')):
     save_data('rand_repeat', dataset, model, serie, len(seed), inf_spread)
     print(": Finished running Random IM.")
 
-def run_non_repeat(graph, dataset, model, serie, max_size=float('inf')):
+def run_no_repeat(graph, dataset, model, serie, max_size=float('inf')):
     '''
         Runs Random IM with non repeat property: it doesn't retarget a user
         that has already been targeted

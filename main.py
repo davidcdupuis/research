@@ -12,7 +12,7 @@ import research_data
 
 datasets = ['small_graph', 'hep', 'hept', 'phy']
 models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.8', '0.9']
-algorithms = ['rtim', 'random_im', 'opt_size']
+algorithms = ['rtim', 'rand_repeat', 'rand_no_repeat', 'opt_size']
 
 if __name__ == "__main__":
     parser = parser = argparse.ArgumentParser(description="Main")
@@ -62,15 +62,18 @@ if __name__ == "__main__":
         print("Launched {} pre-processing!".format(args.algorithm))
         for serie in series:
             if args.algorithm == 'rtim':
-                rtim.run_live(graph)
+                rtim.run_pre_processing(graph, args.dataset, args.model, serie)
 
     if args.live and args.algorithm != 'opt_size':
         print("Launched {} live!".format(args.algorithm))
         for serie in args.series:
             if args.algorithm == 'rtim':
-                rtim.run_live(graph)
-            elif args.algorithm == 'random_im':
-                random_im.run(graph, args.dataset, args.model, serie)
+                rtim.run_live(graph, args.dataset, args.model, serie)
+            elif args.algorithm == 'rand_repeat':
+                random_im.run_repeat(graph, args.dataset, args.model, serie)
+            elif args.algorithm == 'rand_no_repeat':
+                random_im.run_no_repeat(grapg, args.dataset, args.model,
+                                         args.serie)
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")

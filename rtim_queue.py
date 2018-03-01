@@ -88,7 +88,7 @@ class Worker(Process):
             self._result_queue.put([node, res])
 
 
-def manage_processes(graph, fname, model):
+def rtim_inf_scores(graph, fname, model):
     """Launch process for computation.
 
     Launch:
@@ -110,7 +110,7 @@ def manage_processes(graph, fname, model):
     result_queue = Queue()
     writer = Writer(result_queue)
     temp = "data/{0}/{0}_{1}_inf_scores.csv"
-    writer.results_dir = temp.format(fname, model.lower())
+    writer.results_dir = temp.format(fname, model)
     writer.start()
 
     # Instantiate  workers
@@ -143,7 +143,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="RTIM Queue")
     parser.add_argument('-f', '--file', default="hep",
                         help="File name to choose graph from")
-    parser.add_argument("--model", default="WC", help="Model to use")
+    parser.add_argument("--model", default="wc", help="Model to use")
     args = parser.parse_args()
 
     print("-------------------------------------------------------------------")
@@ -159,5 +159,5 @@ if __name__ == "__main__":
     graph = {}
     graph, _ = research_data.import_graph_data(args.file, args.model)
 
-    manage_processes(graph, args.file, args.model.lower())
+    rtim_inf_scores(graph, args.file, args.model)
     print("---")

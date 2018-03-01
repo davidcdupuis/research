@@ -14,7 +14,7 @@ import argparse
 import research_data
 import csv
 import random
-from rtim_queue import manage_processes
+from rtim_queue import rtim_inf_scores
 
 theta_ap = 0.8
 preProc_time = -1
@@ -36,7 +36,7 @@ def inf_scores_graph(graph, values, num_sim=10000):
     print(msg.format(time.time() - t))
 
 
-def target(node, values, theta_inf):
+def target(node, values, theta_ap, theta_inf):
     ''' Decide whether to target a node or not '''
     if values[node]['ap'] > theta_ap or values[node]['inf'] < theta_inf:
         return False
@@ -138,7 +138,7 @@ def save_seed(seeds, inf_spread, dataset, model, series='0'):
     print("> Seed set saved.")
 
 
-def run_pre_processing(graph, graph_values, inf=True):
+def run_pre_processing(graph, dataset, model, graph_values, inf=True):
     '''
         Runs pre-processing part of RTIM
         returns graph_values with [inf, ap], as well as influence_threshold
@@ -146,66 +146,97 @@ def run_pre_processing(graph, graph_values, inf=True):
     '''
     print("> RTIM is Pre-Processing!")
     t0 = time.time()
-    if inf:
-        inf_scores_graph(graph, graph_values)
-        save_inf_scores(graph_values)
-
-    import_inf_scores(dataset, model, graph_values)
-    inf_scores = inf_score_array(graph_values)
-    theta_inf_index = int(inf_threshold_index(inf_scores))
-    theta_inf = inf_scores[theta_inf_index]
+    rtim_inf_scores(graph, dataset, model)
     t1 = time.time()
     t = t1 - t0
-    print("> Influence threshold computed in {} seconds".format(t))
-    preProc_time = t
+    print(": Pre-Processing is over in {} seconds".format(t))
+    save_pre(dataset, model, t)
 
 
-def run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores,
-            dataset):
+def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
+             max_size=float(inf)):
     '''
         Runs live part of RTIM
     '''
     keys = graph.keys()
-    seed = set()
+
+    graph_values = {}
+    for node in keys:
+        graph_values[node] = {'inf': 0, 'ap': 0}
+
+    # computing influence threshold
+    import_inf_scores(dataset, model, graph_values)
+    inf_scores = inf_score_array(graph_values)
+    theta_inf_index = int(inf_threshold_index(inf_scores, top))
+    theta_inf = inf_scores[theta_inf_index]
+
     print("> RTIM is Live!")
-    model = 'data/{0}/random_model/{0}_r0.csv'.format(dataset)
+    seed = set()
+    t0 = time.time()
+
+    file_name = 'data/{0}/random_model/{0}_s{1}.csv'.
+    file_name = file_name.format(dataset, serie)
     with open(model, 'r') as f:
         reader = csv.reader(f)
         for line in reader:
             online_user = int(line[0])
-            if target(online_user, graph_values, theta_inf):
-                # add user to seed set
-                seed.add(online_user)
-                # update targeted user's ap as well as neighbor of max depth 3
+            if (target(online_user, graph_values, theta_ap, theta_inf)
+                and len(seed) <= max_size):
+                seed.add(online_user) # add user to seed set
+                # update targeted user's activation probability
                 graph_values[online_user]['ap'] = 1.0
+                # update act. prob. of neighbors of to depth 3
                 update_neighbors_ap(graph, online_user, graph_values)
                 # update influence threshold
                 theta_inf_index -= 1
                 theta_inf = inf_scores[theta_inf_index]
-    print(": RTIM Live Over!")
+
+    t1 = time.time()
+    t = t1 - t0
+    print(": RTIM Live over. in {} seconds".format(t))
+
+    # compute influence spread of seed set
+    inf_spread = inf_score_est_mp(graph, seed)
+    print("Influence spread of seed set is {}".format(inf_spread))
+
+    save_live(dataset, model, serie, t, len(seed), inf_spread, theta_ap, top)
     return seed
 
 
-def save_data(dataset, model, seed_size, seed_spread, theta_ap, top,
-              av_model, av_dataset, preProc):
+def save_pre(dataset, model, run_time):
     '''
-        Save data to txt file
+        Save pre-processing data in results
     '''
-    file_name = 'data/{0}/rtim/results/{0}_{1}_s{2}.txt'
-    file_name = file_name.format(dataset, model, av_dataset)
+    file_name = 'data/{0}/rtim/results/{0}_{1}_pre.txt'
+    file_name = file_name.format(dataset, model)
     with open(file_name, 'w') as f:
-        f.write('RTIM processing data\n')
+        f.write('RTIM pre-processing data\n')
         f.write('Dataset: {}\n'.format(dataset))
         f.write('Dataset model: {}\n'.format(model))
-        temp = 'User availability dataset: {0}_r{1}.csv\n'
-        f.write(temp.format(dataset, av_dataset))
-        f.write('User availability model: {}\n'.format(av_model))
+        f.write('Computation time: {} seconds\n'.format(run_time))
+    print('> Saved RTIM pre-processing data!')
+
+
+def save_live(dataset, model, serie, run_time, seed_size, spread, theta_ap,
+              top):
+    '''
+        Save live data in results
+    '''
+    file_name = 'data/{0}/rtim/results/{0}_{1}_s{2}_live.txt'
+    file_name = file_name.format(dataset, model, serie)
+    with open(file_name, 'w') as f:
+        f.write('RTIM live data\n')
+        f.write('Dataset: {}\n'.format(dataset))
+        f.write('Dataset model: {}\n'.format(model))
+        temp = 'User availability dataset: {0}_s{1}.csv\n'
+        f.write(temp.format(dataset, serie))
+        # f.write('User availability model: {}\n'.format(av_model))
+        f.write('Computation time: {} seconds\n'.format(run_time))
         f.write('Influence Threshold top tier: {}%\n'.format(top))
         f.write('Activation probability threshold: {}\n'.format(theta_ap))
-        f.write('Pre-Processing time: {} seconds\n'.format(preProc))
         f.write('Seed size: {}\n'.format(seed_size))
-        f.write('Seed spread: {}\n'.format(seed_spread))
-    print('> Saved RTIM results!')
+        f.write('Seed spread: {}\n'.format(spread))
+    print('> Saved RTIM live data!')
 
 
 if __name__ == "__main__":
