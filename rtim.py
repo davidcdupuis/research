@@ -99,13 +99,29 @@ def update_neighbors_ap(graph, node, values, path_nodes=[], path_weight=1,
 
 def save_inf_scores(graph_values, fname, model):
     print("> Saving influence scores to results.csv")
-    file_name = "data/{0}/{0}_{1}_inf_scores.csv".format(fname, model.lower())
+    file_name = "data/rtim/results/{0}_{1}_inf_scores.csv"
+    file_name = file_name.format(fname, model.lower())
     with open(file_name, "w", newline='') as f:
         writer = csv.writer(f)
         for key in graph_values.keys():
             line = [key, graph_values[key]['inf']]
             writer.writerow(line)
     print(": Successfully saved influence scores")
+
+
+def import_inf_scores(dataset, model, values):
+    '''
+    '''
+    file_name = 'data/rtim/results/{0}_{1}_inf_scores.csv'
+    file_name = file_name.format(dataset, model)
+    with open(file_name, "r") as f:
+        for line in f:
+            vals = line.strip("\n").split(",")
+            user = int(vals[0])
+            inf_score = float(vals[1])
+            values[user]['inf'] = inf_score
+    return values
+
 
 def save_seed(seeds, inf_spread, dataset, model, series='0'):
     '''
@@ -121,6 +137,7 @@ def save_seed(seeds, inf_spread, dataset, model, series='0'):
             writer.writerow([seed])
     print("> Seed set saved.")
 
+
 def run_pre_processing(graph, graph_values, inf=True):
     '''
         Runs pre-processing part of RTIM
@@ -133,7 +150,7 @@ def run_pre_processing(graph, graph_values, inf=True):
         inf_scores_graph(graph, graph_values)
         save_inf_scores(graph_values)
 
-    research_data.import_inf_scores_csv('results.csv', graph_values)
+    import_inf_scores(dataset, model, graph_values)
     inf_scores = inf_score_array(graph_values)
     theta_inf_index = int(inf_threshold_index(inf_scores))
     theta_inf = inf_scores[theta_inf_index]
@@ -167,31 +184,6 @@ def run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores,
                 theta_inf = inf_scores[theta_inf_index]
     print(": RTIM Live Over!")
     return seed
-
-
-def run_full(graph, preProc=True, live=True, inf_thresh=0):
-    '''
-        Runs full RTIM experimentation
-        Returns final targeted seed set
-    '''
-    print("---")
-    graph_values = {}
-
-    if inf_thresh != 0:
-        theta_inf = inf_thresh
-    elif preProc == False:
-        print('''> Influence threshold must be specified if
-                pre-processing is not run!''')
-
-    # launch rtim pre-processing
-    if preProc:
-        run_pre_processing(graph, graph_values)
-
-    # launch rtim live
-    if live:
-        return run_live(graph, graph_values, theta_inf)
-    elif preProc:
-        print("Pre-processing finished running without live process")
 
 
 def save_data(dataset, model, seed_size, seed_spread, theta_ap, top,

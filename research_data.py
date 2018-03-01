@@ -56,18 +56,6 @@ def import_graph_data(dataset, model="wc"):
     return (inf_network, conditions)
 
 
-def import_inf_scores_csv(file_name, values):
-    '''
-    '''
-    with open(file_name, "r") as f:
-        for line in f:
-            vals = line.strip("\n").split(",")
-            user = int(vals[0])
-            inf_score = float(vals[1])
-            values[user]['inf'] = inf_score
-    return values
-
-
 if __name__ == "__main__":
     parser = parser = argparse.ArgumentParser(description="Main")
     parser.add_argument('-d', '--dataset', default='small_graph',
@@ -93,4 +81,3 @@ if __name__ == "__main__":
     graph, _ = import_graph_data(args.dataset, args.model)
     if args.dataset == 'small_graph':
         print(graph)
-    # import_inf_scores_csv('results.csv')
