@@ -18,11 +18,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
     parser.add_argument('-d', '--dataset', default='small_graph',
                         help='{}'.format(datasets))
-    parser.add_argument('-m', '--model', default=['wc'], nargs='+',
+    parser.add_argument('-m', '--models', default=['wc'], nargs='+',
                         help='{}'.format(models))
-    parser.add_argument('-a', '--algorithm', default='random',
+    parser.add_argument('-a', '--algorithm', default='rand_repeat',
                         help='{}'.format(algorithms))
-    parser.add_argument('--series', default=[0], type=int, nargs='+',
+    parser.add_argument('-s', '--series', default=[0], type=int, nargs='+',
                         help='What availability series to use.')
     parser.add_argument("--pre", default=False, action="store_true",
                         help="Whether you want to RTIM pre-process")
@@ -34,12 +34,11 @@ if __name__ == "__main__":
         msg = "Invalid arguments [dataset] -> Received: {}"
         raise Exception(msg.format(args.dataset))
 
-    if set(args.model).issubset(models):
+    if not set(args.models).issubset(models):
         msg = "Invalid arguments [model] -> Received: {}"
-        raise Exception(msg.format(args.model))
+        raise Exception(msg.format(args.models))
     else:
-        if args.model != 'wc':
-            args.model = float(args.model)
+        args.models = [float(m) if m != 'wc' else m for m in args.models]
 
     if args.algorithm not in algorithms:
         msg = "Invalid arguments [algorithm] -> Received: {}"
@@ -47,26 +46,27 @@ if __name__ == "__main__":
 
     print("-------- Parameters --------")
     print("Dataset \t [{}]".format(args.dataset))
-    print("Model \t\t [{}]".format(args.model))
+    print("Models \t\t {}".format(args.models))
     print("Algorithm \t [{}]".format(args.algorithm))
     print("Series \t\t {}".format(args.series))
     print("Pre-processing \t [{}]".format(args.pre))
     print("Live \t\t [{}]".format(args.live))
     print("----------------------------")
 
-    graph = {}
-    graph, _ = research_data.import_graph_data(args.dataset, args.model)
-
     if (args.pre and args.algorithm != 'random_im'
         and args.algorithm != 'opt_size'):
         print("Launched {} pre-processing!".format(args.algorithm))
-        for model in args.model:
+        for model in args.models:
+            graph = {}
+            graph, _ = research_data.import_graph_data(args.dataset, model)
             if args.algorithm == 'rtim':
                 rtim.run_pre_processing(graph, args.dataset, model)
 
     if args.live and args.algorithm != 'opt_size':
         print("Launched {} live!".format(args.algorithm))
-        for model in args.model:
+        for model in args.models:
+            graph = {}
+            graph, _ = research_data.import_graph_data(args.dataset, model)
             for serie in args.series:
                 if args.algorithm == 'rtim':
                     rtim.run_live(graph, args.dataset, args.model, serie)
@@ -79,4 +79,5 @@ if __name__ == "__main__":
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")
-        size = optimal_size_mp.run(graph, args.dataset, args.model)
+        for model in args.models:
+            size = optimal_size_mp.run(graph, args.dataset, model)
