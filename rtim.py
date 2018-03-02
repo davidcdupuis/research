@@ -138,13 +138,13 @@ def save_seed(seeds, inf_spread, dataset, model, series='0'):
     print("> Seed set saved.")
 
 
-def run_pre_processing(graph, dataset, model, graph_values, inf=True):
+def run_pre_processing(graph, dataset, model):
     '''
         Runs pre-processing part of RTIM
         returns graph_values with [inf, ap], as well as influence_threshold
         Compute and save influence scores if inf = True
     '''
-    print("> RTIM is Pre-Processing!")
+    print("> RTIM is Pre-Processing: {} - {}".format(dataset, model))
     t0 = time.time()
     rtim_inf_scores(graph, dataset, model)
     t1 = time.time()
@@ -158,7 +158,7 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     '''
         Runs live part of RTIM
     '''
-    print("> RTIM is Live!")
+    print("> RTIM is Live: {} - {} - {}".format(dataset, model, serie))
     keys = graph.keys()
 
     graph_values = {}

@@ -15,10 +15,10 @@ models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.8', '0.9']
 algorithms = ['rtim', 'rand_repeat', 'rand_no_repeat', 'opt_size']
 
 if __name__ == "__main__":
-    parser = parser = argparse.ArgumentParser(description="Main")
+    parser = argparse.ArgumentParser(description="Main")
     parser.add_argument('-d', '--dataset', default='small_graph',
                         help='{}'.format(datasets))
-    parser.add_argument('-m', '--model', default='wc',
+    parser.add_argument('-m', '--model', default=['wc'], nargs='+',
                         help='{}'.format(models))
     parser.add_argument('-a', '--algorithm', default='random',
                         help='{}'.format(algorithms))
@@ -60,19 +60,22 @@ if __name__ == "__main__":
     if (args.pre and args.algorithm != 'random_im'
         and args.algorithm != 'opt_size'):
         print("Launched {} pre-processing!".format(args.algorithm))
-        for serie in args.series:
+        for model in args.model:
             if args.algorithm == 'rtim':
-                rtim.run_pre_processing(graph, args.dataset, args.model, serie)
+                rtim.run_pre_processing(graph, args.dataset, model)
 
     if args.live and args.algorithm != 'opt_size':
         print("Launched {} live!".format(args.algorithm))
-        for serie in args.series:
-            if args.algorithm == 'rtim':
-                rtim.run_live(graph, args.dataset, args.model, serie)
-            elif args.algorithm == 'rand_repeat':
-                random_im.run_repeat(graph, args.dataset, args.model, serie)
-            elif args.algorithm == 'rand_no_repeat':
-                random_im.run_no_repeat(graph, args.dataset, args.model, serie)
+        for model in args.model:
+            for serie in args.series:
+                if args.algorithm == 'rtim':
+                    rtim.run_live(graph, args.dataset, args.model, serie)
+                elif args.algorithm == 'rand_repeat':
+                    random_im.run_repeat(graph, args.dataset, args.model,
+                                         serie)
+                elif args.algorithm == 'rand_no_repeat':
+                    random_im.run_no_repeat(graph, args.dataset, args.model,
+                                            serie)
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")
