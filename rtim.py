@@ -99,7 +99,7 @@ def update_neighbors_ap(graph, node, values, path_nodes=[], path_weight=1,
 
 def save_inf_scores(graph_values, fname, model):
     print("> Saving influence scores to results.csv")
-    file_name = "data/rtim/results/{0}_{1}_inf_scores.csv"
+    file_name = "data/{0}/rtim/inf_scores/{0}_{1}_inf_scores.csv"
     file_name = file_name.format(fname, model.lower())
     with open(file_name, "w", newline='') as f:
         writer = csv.writer(f)
@@ -112,7 +112,7 @@ def save_inf_scores(graph_values, fname, model):
 def import_inf_scores(dataset, model, values):
     '''
     '''
-    file_name = 'data/rtim/results/{0}_{1}_inf_scores.csv'
+    file_name = 'data/{0}/rtim/inf_scores/{0}_{1}_inf_scores.csv'
     file_name = file_name.format(dataset, model)
     with open(file_name, "r") as f:
         for line in f:
@@ -158,6 +158,7 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     '''
         Runs live part of RTIM
     '''
+    print("> RTIM is Live!")
     keys = graph.keys()
 
     graph_values = {}
@@ -169,8 +170,9 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     inf_scores = inf_score_array(graph_values)
     theta_inf_index = int(inf_threshold_index(inf_scores, top))
     theta_inf = inf_scores[theta_inf_index]
+    print(": Activation threshold is {}".format(theta_aps))
+    print(": Influence threshold is {}".format(theta_inf))
 
-    print("> RTIM is Live!")
     seed = set()
     t0 = time.time()
 
@@ -197,7 +199,7 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
 
     # compute influence spread of seed set
     inf_spread = inf_score_est_mp(graph, seed)
-    print("Influence spread of seed set is {}".format(inf_spread))
+    print(": Influence spread of seed set is {}".format(inf_spread))
 
     save_live(dataset, model, serie, t, len(seed), inf_spread, theta_ap, top)
     return seed
@@ -245,9 +247,9 @@ if __name__ == "__main__":
         second argument is file or database name to define data to use
     '''
     parser = argparse.ArgumentParser(description="RTIM")
-    parser.add_argument('-f', '--file', default="hep",
+    parser.add_argument('-d', '--dataset', default="small_graph",
                         help="File name to choose graph from")
-    parser.add_argument("--model", default="WC", help="Model to use")
+    parser.add_argument("--model", default="wc", help="Model to use")
     parser.add_argument("--series", default="1",
                         help="What random series to use in live process")
     parser.add_argument('--ap', default=0.8, type=float,
@@ -265,10 +267,10 @@ if __name__ == "__main__":
         raise Exception(msg.format(args.model))
 
     print("-------------------------------------------------------------------")
-    print("Importing [{}]".format(args.file))
+    print("Importing [{}]".format(args.dataset))
     print("Model [{}]".format(args.model))
     print("Theta_ap [{}]".format(args.ap))
-    print("Theta_inf [{}]".format(args.inf))
+    print("Top [{}]".format(args.inf))
 
     theta_ap = args.ap
     # print("RTIM Pre-Process [{}]".format(args.preProc))
@@ -276,35 +278,29 @@ if __name__ == "__main__":
 
     print("---")
     graph = {}
-    graph, _ = research_data.import_graph_data(args.file, args.model)
+    graph, _ = research_data.import_graph_data(args.dataset, args.model)
 
     graph_values = {}
     for node in graph.keys():
         graph_values[node] = {'inf': 0, 'ap': 0}
 
-    # inf_scores_graph(graph, graph_values)
-    # save_inf_scores(graph_values, args.file, args.model)
-    # manage_processes(graph)
-
-    fname = 'data/{0}/{0}_{1}_inf_scores.csv'
-    fname = fname.format(args.file, args.model.lower())
-    research_data.import_inf_scores_csv(fname, graph_values)
-    # print(graph_values)
-    inf_scores = inf_score_array(graph_values)
-
-    theta_inf_index = int(inf_threshold_index(inf_scores, args.inf))
-    theta_inf = inf_scores[theta_inf_index]
-    # msg = "Influence threshold index {}, value {}"
-    # print(msg.format(theta_inf_index, theta_inf))
-
-    seed = set()
-    seed = run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores,
-                    args.file)
-    print("---")
-
-    inf_spread = inf_score_est_mp(graph, seed)
-    print("Influence spread of seed set is {}".format(inf_spread))
-    save_seed(seed, inf_spread, args.file, args.model, args.series)
-
-    save_data(args.file, args.model, len(seed), inf_spread, theta_ap, args.inf,
-              'random_basic', 0, preProc_time)
+    import_inf_scores(args.dataset, args.model, graph_values)
+    print(graph_values)
+    # inf_scores = inf_score_array(graph_values)
+    #
+    # theta_inf_index = int(inf_threshold_index(inf_scores, args.inf))
+    # theta_inf = inf_scores[theta_inf_index]
+    # # msg = "Influence threshold index {}, value {}"
+    # # print(msg.format(theta_inf_index, theta_inf))
+    #
+    # seed = set()
+    # seed = run_live(graph, graph_values, theta_inf, theta_inf_index, inf_scores,
+    #                 args.file)
+    # print("---")
+    #
+    # inf_spread = inf_score_est_mp(graph, seed)
+    # print("Influence spread of seed set is {}".format(inf_spread))
+    # save_seed(seed, inf_spread, args.file, args.model, args.series)
+    #
+    # save_data(args.file, args.model, len(seed), inf_spread, theta_ap, args.inf,
+    #           'random_basic', 0, preProc_time)
