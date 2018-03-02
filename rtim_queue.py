@@ -88,7 +88,7 @@ class Worker(Process):
             self._result_queue.put([node, res])
 
 
-def rtim_inf_scores(graph, fname, model):
+def rtim_inf_scores(graph, dataset, model):
     """Launch process for computation.
 
     Launch:
@@ -109,8 +109,8 @@ def rtim_inf_scores(graph, fname, model):
     # Instantiate and start result writer
     result_queue = Queue()
     writer = Writer(result_queue)
-    temp = "data/{0}/{0}_{1}_inf_scores.csv"
-    writer.results_dir = temp.format(fname, model)
+    temp = "data/{0}/rtim/inf_scores/{0}_{1}_inf_scores.csv"
+    writer.results_dir = temp.format(dataset, model)
     writer.start()
 
     # Instantiate  workers
