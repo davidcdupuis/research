@@ -1,0 +1,4 @@
+Random IM processing data
+User availability model: phy_s0.csv
+Seed size: 4769
+Seed spread: 8509.0339

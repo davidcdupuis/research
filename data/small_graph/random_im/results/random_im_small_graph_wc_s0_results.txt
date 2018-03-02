@@ -1,4 +1,4 @@
 Random IM processing data
 User availability model: small_graph_s0.csv
-Seed size: 7
-Seed spread: 12.241699999999996
+Seed size: 10
+Seed spread: 18.346500000000074

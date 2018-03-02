@@ -1,0 +1,4 @@
+Random IM processing data
+User availability model: hept_s0.csv
+Seed size: 5967
+Seed spread: 10494.4712

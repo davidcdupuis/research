@@ -60,7 +60,7 @@ if __name__ == "__main__":
     if (args.pre and args.algorithm != 'random_im'
         and args.algorithm != 'opt_size'):
         print("Launched {} pre-processing!".format(args.algorithm))
-        for serie in series:
+        for serie in args.series:
             if args.algorithm == 'rtim':
                 rtim.run_pre_processing(graph, args.dataset, args.model, serie)
 
