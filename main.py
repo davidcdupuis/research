@@ -34,7 +34,7 @@ if __name__ == "__main__":
         msg = "Invalid arguments [dataset] -> Received: {}"
         raise Exception(msg.format(args.dataset))
 
-    if args.model not in models:
+    if set(args.model).issubset(models):
         msg = "Invalid arguments [model] -> Received: {}"
         raise Exception(msg.format(args.model))
     else:
