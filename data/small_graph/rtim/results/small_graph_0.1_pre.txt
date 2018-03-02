@@ -1,0 +1,4 @@
+RTIM pre-processing data
+Dataset: small_graph
+Dataset model: 0.1
+Computation time: 0.09410953521728516 seconds

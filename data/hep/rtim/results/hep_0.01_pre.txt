@@ -1,0 +1,4 @@
+RTIM pre-processing data
+Dataset: hep
+Dataset model: 0.01
+Computation time: 14.610368728637695 seconds

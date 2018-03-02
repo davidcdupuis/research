@@ -1,0 +1,9 @@
+RTIM live data
+Dataset: small_graph
+Dataset model: wc
+User availability dataset: small_graph_s0.csv
+Computation time: 0.0001220703125 seconds
+Influence Threshold top tier: 20%
+Activation probability threshold: 0.8
+Seed size: 2
+Seed spread: 9.2543

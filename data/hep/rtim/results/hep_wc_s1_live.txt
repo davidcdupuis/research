@@ -1,0 +1,9 @@
+RTIM live data
+Dataset: hep
+Dataset model: wc
+User availability dataset: hep_s1.csv
+Computation time: 3.01822829246521 seconds
+Influence Threshold top tier: 20%
+Activation probability threshold: 0.8
+Seed size: 2944
+Seed spread: 7394.2336
