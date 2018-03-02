@@ -72,8 +72,7 @@ if __name__ == "__main__":
             elif args.algorithm == 'rand_repeat':
                 random_im.run_repeat(graph, args.dataset, args.model, serie)
             elif args.algorithm == 'rand_no_repeat':
-                random_im.run_no_repeat(grapg, args.dataset, args.model,
-                                         args.serie)
+                random_im.run_no_repeat(graph, args.dataset, args.model, serie)
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")

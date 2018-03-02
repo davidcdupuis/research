@@ -154,7 +154,7 @@ def run_pre_processing(graph, dataset, model, graph_values, inf=True):
 
 
 def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
-             max_size=float(inf)):
+             max_size=float('inf')):
     '''
         Runs live part of RTIM
     '''
@@ -174,7 +174,7 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     seed = set()
     t0 = time.time()
 
-    file_name = 'data/{0}/random_model/{0}_s{1}.csv'.
+    file_name = 'data/{0}/random_model/{0}_s{1}.csv'
     file_name = file_name.format(dataset, serie)
     with open(model, 'r') as f:
         reader = csv.reader(f)
