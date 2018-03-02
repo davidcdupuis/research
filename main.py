@@ -69,13 +69,11 @@ if __name__ == "__main__":
             graph, _ = research_data.import_graph_data(args.dataset, model)
             for serie in args.series:
                 if args.algorithm == 'rtim':
-                    rtim.run_live(graph, args.dataset, args.model, serie)
+                    rtim.run_live(graph, args.dataset, model, serie)
                 elif args.algorithm == 'rand_repeat':
-                    random_im.run_repeat(graph, args.dataset, args.model,
-                                         serie)
+                    random_im.run_repeat(graph, args.dataset, model, serie)
                 elif args.algorithm == 'rand_no_repeat':
-                    random_im.run_no_repeat(graph, args.dataset, args.model,
-                                            serie)
+                    random_im.run_no_repeat(graph, args.dataset, model, serie)
 
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")
