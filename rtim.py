@@ -15,6 +15,7 @@ import research_data
 import csv
 import random
 from rtim_queue import rtim_inf_scores
+import plot.py
 
 theta_ap = 0.8
 preProc_time = -1
@@ -154,7 +155,7 @@ def run_pre_processing(graph, dataset, model):
 
 
 def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
-             max_size=float('inf')):
+             max_size=float('inf'), test=False, new=False):
     '''
         Runs live part of RTIM
     '''
@@ -170,8 +171,9 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     inf_scores = inf_score_array(graph_values)
     theta_inf_index = int(inf_threshold_index(inf_scores, top))
     theta_inf = inf_scores[theta_inf_index]
-    print(": Activation threshold is {}".format(theta_ap))
-    print(": Influence threshold is {}".format(theta_inf))
+    if not test:
+        print(": Activation threshold is {}".format(theta_ap))
+        print(": Influence threshold is {}".format(theta_inf))
 
     seed = set()
     t0 = time.time()
@@ -195,13 +197,20 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
 
     t1 = time.time()
     t = t1 - t0
-    print(": RTIM Live over. in {} seconds".format(t))
+    if not test:
+        print(": RTIM Live over. in {} seconds".format(t))
 
     # compute influence spread of seed set
     inf_spread = inf_score_est_mp(graph, seed)
-    print(": Influence spread of seed set is {}".format(inf_spread))
+    if not test:
+        print(": Influence spread of seed set is {}".format(inf_spread))
 
-    save_live(dataset, model, serie, t, len(seed), inf_spread, theta_ap, top)
+    if test:
+        save_test(dataset, model, serie, len(seed), inf_spread, top, theta_ap,
+                  max_size, new)
+        plot.rtim_plot_test_parameters(dataset)
+    else:
+        save_live(dataset, model, serie, t, len(seed), inf_spread, theta_ap, top)
     return seed
 
 
@@ -240,6 +249,26 @@ def save_live(dataset, model, serie, run_time, seed_size, spread, theta_ap,
         f.write('Seed spread: {}\n'.format(spread))
     print('> Saved RTIM live data!')
 
+
+def save_test(dataset, model, serie, seed_size, spread, top, theta_ap,
+              max_size, new=False):
+    '''
+        Save csv of parameters
+    '''
+    file_name = 'data/{0}/rtim/results/{0}_test.csv'
+    file_name = file_name.format(dataset)
+    if new:
+        mode = 'w'
+    else:
+        mode = 'a'
+    with open(file_name, mode, newline='') as f:
+        writer = csv.writer(f)
+        if mode == 'w':
+            writer.writerow(['dataset', 'model', 'serie', 'seed_size',
+                            'spread', 'top', 'theta_ap', 'max_size'])
+        writer.writerow([dataset, model, serie, seed_size, spread, top,
+                        theta_ap, max_size])
+    print("> Saved RTIM parameter test data to {}".format(file_name))
 
 if __name__ == "__main__":
     '''

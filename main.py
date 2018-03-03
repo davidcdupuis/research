@@ -28,6 +28,10 @@ if __name__ == "__main__":
                         help="Whether you want to RTIM pre-process")
     parser.add_argument("--live", default=False, action="store_true",
                         help="Whether you want to run RTIM live")
+    parser.add_argument("--test", default=False, action="store_true",
+                        help="RTIM: Test top and theta_ap parameters")
+    parser.add_argument("--new", default=False, action="store_true",
+                        help="Launch new test")
     args = parser.parse_args()
 
     if args.dataset not in datasets:
@@ -79,3 +83,16 @@ if __name__ == "__main__":
         print("Computing optimal size of seed set!")
         for model in args.models:
             size = optimal_size_mp.run(graph, args.dataset, model)
+
+    if args.test:
+        tops = [5, 10, 15, 20, 25, 30, 35, 40]
+        theta_aps = [0.5, 0.6, 0.7, 0.8, 0.9]
+        for model in args.models:
+            graph = {}
+            graph, _ = research_data.import_graph_data(args.dataset, model)
+            for serie in args.series:
+                for thresh in theta_aps:
+                    for t in tops:
+                        print(" Parameters: {} - {}%".format(thresh, t))
+                        rtim.run_live(graph, args.dataset, model, serie, thresh,
+                                      t, float('inf'), True, args.new)
