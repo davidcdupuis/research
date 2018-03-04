@@ -100,4 +100,4 @@ if __name__ == "__main__":
                                       t, float('inf'), True, new)
                         if new:
                             new = False
-                plot.rtim_plot_test_parameters(dataset)
+                plot.rtim_plot_test_parameters(args.dataset)
