@@ -28,22 +28,27 @@ def rtim_plot_test_parameters(dataset):
               0.6: 'red',
               0.7: 'green',
               0.8: 'orange',
-              0.9: 'purple'
+              0.9: 'purple',
+              0.95: 'pink'
               }
 
     for serie in series:
+        plt.figure()
         for ap in aps:
             cols = ['serie', 'spread', 'top', 'theta_ap']
             cond = ((df['theta_ap'] == ap) & (df['serie'] == serie))
             tmp_df = df.loc[cond][cols]
+            l = 'theta_ap: {}'.format(ap)
             plt.plot(tmp_df.top, tmp_df.spread, colors[ap],
-                     label='theta_ap: {}'.format(ap))
+                     label=l)
         plt.title('% influencers vs inf spread - s{}'.format(serie))
         plt.ylabel('influence spread')
         plt.xlabel('top influencers %')
-        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-        plot_name = 'data/{0}/rtim/results/{0}_s{1}_{2}_test.png'
-        plt.savefig(plot_name.format(dataset, serie, ap))
+        lgd = plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        plot_name = 'data/{0}/rtim/results/{0}_s{1}_test.png'
+        plt.savefig(plot_name.format(dataset, serie),
+                    bbox_extra_artists=(lgd,),
+                    bbox_inches='tight')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
@@ -55,4 +60,4 @@ if __name__ == "__main__":
         msg = "Invalid arguments [dataset] -> Received: {}"
         raise Exception(msg.format(args.dataset))
 
-    rtim_plot_test_parameters('small_graph')
+    rtim_plot_test_parameters(args.dataset)
