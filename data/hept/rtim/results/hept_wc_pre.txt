@@ -1,0 +1,4 @@
+RTIM pre-processing data
+Dataset: hept
+Dataset model: wc
+Computation time: 38.066524505615234 seconds
