@@ -15,7 +15,7 @@ import research_data
 import csv
 import random
 from rtim_queue import rtim_inf_scores
-import plot.py
+import plot
 
 theta_ap = 0.8
 preProc_time = -1
