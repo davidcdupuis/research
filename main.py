@@ -99,3 +99,4 @@ if __name__ == "__main__":
                                       t, float('inf'), True, new)
                         if new:
                             new = False
+                rtim_plot_test_parameters(dataset)

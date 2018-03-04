@@ -208,9 +208,9 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     if test:
         save_test(dataset, model, serie, len(seed), inf_spread, top, theta_ap,
                   max_size, new)
-        plot.rtim_plot_test_parameters(dataset)
     else:
-        save_live(dataset, model, serie, t, len(seed), inf_spread, theta_ap, top)
+        save_live(dataset, model, serie, t, len(seed), inf_spread, theta_ap,
+                  top)
     return seed
 
 
