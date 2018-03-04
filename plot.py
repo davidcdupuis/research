@@ -35,14 +35,15 @@ def rtim_plot_test_parameters(dataset):
     for serie in series:
         plt.figure()
         for ap in aps:
-            cols = ['serie', 'spread', 'top', 'theta_ap']
+            cols = ['serie','seed_size', 'spread', 'top', 'theta_ap']
             cond = ((df['theta_ap'] == ap) & (df['serie'] == serie))
             tmp_df = df.loc[cond][cols]
             l = 'theta_ap: {}'.format(ap)
-            plt.plot(tmp_df.top, tmp_df.spread, colors[ap],
+            diff = tmp_df.spread - tmp_df.seed_size
+            plt.plot(tmp_df.top, diff, colors[ap],
                      label=l)
         plt.title('% influencers vs inf spread - s{}'.format(serie))
-        plt.ylabel('influence spread')
+        plt.ylabel('inf_spread - seed_size')
         plt.xlabel('top influencers %')
         lgd = plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         plot_name = 'data/{0}/rtim/results/{0}_s{1}_test.png'
