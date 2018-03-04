@@ -9,6 +9,7 @@ import rtim
 import random_im
 import optimal_size_mp
 import research_data
+import plot
 
 datasets = ['small_graph', 'hep', 'hept', 'phy']
 models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.8', '0.9']
@@ -99,4 +100,4 @@ if __name__ == "__main__":
                                       t, float('inf'), True, new)
                         if new:
                             new = False
-                rtim_plot_test_parameters(dataset)
+                plot.rtim_plot_test_parameters(dataset)
