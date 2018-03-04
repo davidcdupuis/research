@@ -43,7 +43,7 @@ def rtim_plot_test_parameters(dataset):
         plt.xlabel('top influencers %')
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         plot_name = 'data/{0}/rtim/results/{0}_s{1}_{2}_test.png'
-        plt.savefig(plot_name.format(dataset, serie, theta_ap))
+        plt.savefig(plot_name.format(dataset, serie, ap))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
