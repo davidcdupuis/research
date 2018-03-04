@@ -192,7 +192,8 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
                 # update act. prob. of neighbors of to depth 3
                 update_neighbors_ap(graph, online_user, graph_values)
                 # update influence threshold
-                theta_inf_index -= 1
+                if theta_inf_index >= 1:
+                    theta_inf_index -= 1
                 theta_inf = inf_scores[theta_inf_index]
 
     t1 = time.time()
