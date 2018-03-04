@@ -87,6 +87,7 @@ if __name__ == "__main__":
     if args.test:
         tops = [5, 10, 15, 20, 25, 30, 35, 40]
         theta_aps = [0.5, 0.6, 0.7, 0.8, 0.9]
+        new = True
         for model in args.models:
             graph = {}
             graph, _ = research_data.import_graph_data(args.dataset, model)
@@ -95,4 +96,6 @@ if __name__ == "__main__":
                     for t in tops:
                         print(" Parameters: {} - {}%".format(thresh, t))
                         rtim.run_live(graph, args.dataset, model, serie, thresh,
-                                      t, float('inf'), True, args.new)
+                                      t, float('inf'), True, new)
+                        if new:
+                            new = False
