@@ -171,7 +171,6 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     inf_scores = inf_score_array(graph_values)
     theta_inf_index = int(inf_threshold_index(inf_scores, top))
     theta_inf = inf_scores[theta_inf_index]
-    print("Influence threshold is {}".format(theta_inf))
     if not test:
         print(": Activation threshold is {}".format(theta_ap))
         print(": Influence threshold is {}".format(theta_inf))
@@ -181,12 +180,15 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
 
     file_name = 'data/{0}/random_model/{0}_s{1}.csv'
     file_name = file_name.format(dataset, serie)
+    count = 0
+    n = True
     with open(file_name, 'r') as f:
         reader = csv.reader(f)
         for line in reader:
+            count += 1
             online_user = int(line[0])
-            if (target(online_user, graph_values, theta_ap, theta_inf)
-                and len(seed) <= max_size):
+            targeted = target(online_user, graph_values, theta_ap, theta_inf)
+            if targeted and len(seed) <= max_size:
                 seed.add(online_user) # add user to seed set
                 # update targeted user's activation probability
                 graph_values[online_user]['ap'] = 1.0
@@ -196,7 +198,13 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
                 if theta_inf_index >= 1:
                     theta_inf_index -= 1
                 theta_inf = inf_scores[theta_inf_index]
-
+            save_live_data(dataset, model, serie, theta_ap, theta_inf, top,
+                           targeted, online_user,
+                           graph_values[online_user]['ap'],
+                           graph_values[online_user]['inf'],
+                           count, len(seed), n)
+            n = False
+    plot.rtim_plot_live_data(dataset, model, serie, theta_ap, top)
     t1 = time.time()
     t = t1 - t0
     if not test:
@@ -271,6 +279,31 @@ def save_test(dataset, model, serie, seed_size, spread, top, theta_ap,
         writer.writerow([dataset, model, serie, seed_size, spread, top,
                         theta_ap, max_size])
     print("> Saved RTIM parameter test data to {}".format(file_name))
+
+
+def save_live_data(dataset, model, serie, theta_A, theta_I, top,
+                   targeted, user_id, user_A, user_I, number_users, seed_size,
+                   new = False):
+    '''
+        Save live data during live process
+    '''
+    file_name = 'data/{0}/rtim/results/{0}_{1}_s{2}_{3}_{4}_live.csv'
+    file_name = file_name.format(dataset, model, serie, theta_A, top)
+    if new:
+        mode = 'w'
+    else:
+        mode = 'a'
+    with open(file_name, mode, newline='') as f:
+        writer = csv.writer(f)
+        if mode == 'w':
+            writer.writerow(['theta_A', 'theta_I', 'top', 'num_users',
+                             'seed_size', 'user_id', 'user_A', 'user_I',
+                             'targeted'])
+        writer.writerow([theta_A, theta_I, top, number_users, seed_size,
+                         user_id, user_A, user_I, targeted])
+
+
+
 
 if __name__ == "__main__":
     '''

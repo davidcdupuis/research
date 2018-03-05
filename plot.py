@@ -51,6 +51,29 @@ def rtim_plot_test_parameters(dataset):
                     bbox_extra_artists=(lgd,),
                     bbox_inches='tight')
 
+
+def rtim_plot_live_data(dataset, model, serie, t_A, top):
+    '''
+    '''
+    file_name = 'data/{0}/rtim/results/{0}_{1}_s{2}_{3}_{4}_live.csv'
+    file_name = file_name.format(dataset, model, serie, t_A, top)
+    df = pd.read_csv(file_name)
+    fig = plt.figure(figsize=(10, 14))
+    plt.subplot(211)
+    plt.title('# users targeted over time')
+    plt.plot(df['num_users'], df['seed_size'])
+    plt.xlabel('time')
+    plt.ylabel('# users targeted')
+    plt.subplot(212)
+    plt.title('theta_inf over time')
+    plt.plot(df['num_users'], df['theta_I'], label='theta_I')
+    plt.xlabel('time')
+    plt.ylabel('theta_inf')
+    fig.tight_layout()
+    plot_name = 'data/{0}/rtim/results/{0}_{1}_s{2}_{3}_{4}_live.png'
+    plt.savefig(plot_name.format(dataset, serie, model, t_A, top))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
     parser.add_argument('-d', '--dataset', default='small_graph',
