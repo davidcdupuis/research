@@ -86,8 +86,9 @@ if __name__ == "__main__":
             size = optimal_size_mp.run(graph, args.dataset, model)
 
     if args.test:
-        tops = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80,
-                85, 90, 95, 100]
+        # tops = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80,
+        #        85, 90, 95, 100]
+        tops = [40, 45, 50, 55, 60, 65, 70, 75, 80] 
         theta_aps = [0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
         new = True
         for model in args.models:

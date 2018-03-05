@@ -171,6 +171,7 @@ def run_live(graph, dataset, model, serie, theta_ap=0.8, top=20,
     inf_scores = inf_score_array(graph_values)
     theta_inf_index = int(inf_threshold_index(inf_scores, top))
     theta_inf = inf_scores[theta_inf_index]
+    print("Influence threshold is {}".format(theta_inf))
     if not test:
         print(": Activation threshold is {}".format(theta_ap))
         print(": Influence threshold is {}".format(theta_inf))
