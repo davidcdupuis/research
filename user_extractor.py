@@ -21,11 +21,12 @@ def extract_users():
                 follower = line[1]
                 if user not in nodes:
                     writer.writerow([user])
+                    nodes.add(user)
+                if follower not in nodes:
+                    writer.writerow([follower])
+                    nodes.add(follower)
                 writer.writerow([follower])
-                if len(nodes) == 1000:
-                    nodes.pop()
-                nodes.add(user)
-                if count % 1000000 == 0:
+                if count % 10000000 == 0:
                     print("Processed {} lines!".format(count))
 
 def extract_num_followers():
@@ -97,8 +98,7 @@ def extract_sample_users():
                     nodes.add(user)
                 if follower not in nodes:
                     writer.writerow([follower])
-                if len(nodes) == 1000:
-                    nodes.pop()
+                    nodes.add(follower)
                 if count % 10000000 == 0:
                     print("Processed {} lines!".format(count))
 
