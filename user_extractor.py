@@ -74,7 +74,7 @@ def extract_sample_edges():
                         writer.writerow([user, follower])
                         line_count += 1
                         user_count += 1
-                if line_count >= 1000000:
+                if line_count >= 10000000:
                     print("Line_count: {}".format(line_count))
                     break
 
@@ -99,7 +99,7 @@ def extract_sample_users():
                     writer.writerow([follower])
                 if len(nodes) == 1000:
                     nodes.pop()
-                if count % 50000 == 0:
+                if count % 10000000 == 0:
                     print("Processed {} lines!".format(count))
 
 if __name__ == "__main__":
