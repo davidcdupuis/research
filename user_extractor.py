@@ -63,17 +63,18 @@ def extract_sample_edges():
             user = first_line[0]
             user_count = 1
             for line in reader:
-                line_count += 1
                 follower = line[1]
                 if line[0] != user:
                     user = line[0]
                     user_count = 1
                     writer.writerow([user, follower])
+                    line_count += 1
                 else:
                     if user_count <= 100:
                         writer.writerow([user, follower])
+                        line_count += 1
                         user_count += 1
-                if line_count >= 100000:
+                if line_count >= 1000000:
                     print("Line_count: {}".format(line_count))
                     break
 
