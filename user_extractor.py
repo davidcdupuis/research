@@ -16,18 +16,20 @@ def extract_users():
             reader = csv.reader(f1, delimiter='\t')
             writer = csv.writer(f2)
             for line in reader:
-                count += 1
                 user = line[0]
                 follower = line[1]
                 if user not in nodes:
+                    count += 1
                     writer.writerow([user])
                     nodes.add(user)
+                    if count % 10000000 == 0:    
+                        print("Processed {} users!".format(count)) 
                 if follower not in nodes:
+                    count += 1
                     writer.writerow([follower])
                     nodes.add(follower)
-                writer.writerow([follower])
-                if count % 10000000 == 0:
-                    print("Processed {} lines!".format(count))
+                    if count % 10000000 == 0:
+                        print("Processed {} users!".format(count))
 
 def extract_num_followers():
     with open('../TwitterData/num_followers.csv', 'w', newline='') as f:
@@ -115,7 +117,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.users:
-        extract_users
+        extract_users()
     if args.followers:
         extract_num_followers()
     if args.sampleEdges:
