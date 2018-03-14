@@ -7,6 +7,7 @@ import multiprocessing as mp
 import argparse
 from optimal_size import sim_spread, num_seed_sets
 import research_data
+from math import ceil
 
 run_time = 0
 
@@ -48,20 +49,23 @@ def run(graph, dataset, model, num_sim=10000):
         Run optimal_size_mp to find optimal seed size
         Save results to file in folder
     '''
+    print("> Searching for optimal seed set size")
     result = find_opt_seed_size(graph, num_sim)
-    opt_size = round(result)
+    print(": Optimal Size finished running!")
+    opt_size = ceil(result)
 
+    print("Optimal seed size is {}".format(opt_size))
     save_data(dataset, model, result, opt_size, num_sim)
-    print("Optimal Size finished running!")
+
 
 
 if __name__ == "__main__":
     # Manage command-line arguments
     parser = argparse.ArgumentParser(description="Multi-process optsize")
     parser.add_argument("-n", "--number", type=int, default=100,
-                        help="Number of simulation.")
+                        help="Number of simulations.")
     parser.add_argument('-m', '--model', default="WC", help="Model to use")
-    parser.add_argument('-f', '--file', default="hep_wc",
+    parser.add_argument('-d', '--dataset', default="hep",
                         help="File name to choose graph from")
     args = parser.parse_args()
 
@@ -82,7 +86,8 @@ if __name__ == "__main__":
     graph = {}
     graph, _ = research_data.import_graph_data(args.file, args.model)
 
-    opt_size = round(find_opt_seed_size(graph, args.number))
-    print("---")
-    print("Optimal seed size is {}".format(opt_size))
-    num_seed_sets(len(graph.keys()), int(opt_size))
+    # opt_size = round(find_opt_seed_size(graph, args.number))
+    # print("---")
+    # print("Optimal seed size is {}".format(opt_size))
+    # num_seed_sets(len(graph.keys()), int(opt_size))
+    run(graph, args.dataset, args.model, args.number)
