@@ -1,21 +1,23 @@
 // Assign weight to each edge based on number of incoming edges for each node
 MATCH
-	(n)<-[r:INFLUENCES]-()
+    (u)<-[r:INFLUENCES]-(p)
 WITH
-	1.0/count(r) as weight, r, n
-SET
-	r.wc = weight, r.ic0_01 = 0.01, r.ic0_1 = 0.1
-RETURN COUNT(r)
+    u, 1.0 / (ROUND(100000000 * size(COLLECT(r))) / 100000000) AS weight, COLLECT(r) AS rels
+UNWIND rels AS rel
+SET rel.weight = weight
+RETURN u
 
 // Same as above put in parallel
 CALL apoc.periodic.iterate(
-    "MATCH
-        (n)<-[r:INFLUENCES]-()
-    RETURN
-        1.0/count(r) as weight, r",
-    "SET r.wc = weight, r.ic0_01 = 0.01, r.ic0_1 = 0.1",
-    {batchSize: 100000, parallel: true}
-)
+           "MATCH
+		       (u)<-[r:INFLUENCES]-(p)
+		   WITH
+		       u, 1.0 / (ROUND(100000000 * size(COLLECT(r))) / 100000000) AS weight, COLLECT(r) AS rels
+		   RETURN rels, weight",
+           "UNWIND rels AS rel
+		   SET rel.wc = weight, rel.ic0_01 = 0.01, rel.ic0_1 = 0.1",
+           {batchSize: 100000, parallel: true}
+       );
 
 // Build small test graph
 CREATE (u1:User {uid: 1, name: "A"})
