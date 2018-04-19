@@ -18,6 +18,8 @@ reaches = ['100', '95', '90', '80', '70', '60', '50', '40', '30', '20', '10']
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
+    parser.add_argument("-n", "--simulations", type=int, default=100,
+                        help="Number of simulations.")
     parser.add_argument('-d', '--dataset', default='small_graph',
                         help='{}'.format(datasets))
     parser.add_argument('-m', '--models', default=['wc'], nargs='+',
@@ -61,6 +63,7 @@ if __name__ == "__main__":
     print("Models \t\t {}".format(args.models))
     print("Reach \t\t {}".format(args.reach))
     print("Algorithm \t [{}]".format(args.algorithm))
+    print("Simulation \t\t {}".format(args.simulations))
     print("Series \t\t {}".format(args.series))
     print("Pre-processing \t [{}]".format(args.pre))
     print("Live \t\t [{}]".format(args.live))
@@ -95,7 +98,7 @@ if __name__ == "__main__":
                 graph = {}
                 graph, _ = research_data.import_graph_data(args.dataset, model)
                 size = optimal_size_mp.run(graph, args.dataset, model,
-                                           int(reach))
+                                           int(reach), args.simulations)
 
     if args.test:
         # tops = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80,
