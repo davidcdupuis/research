@@ -12,7 +12,7 @@ import research_data
 import plot
 
 datasets = ['small_graph', 'hep', 'hept', 'phy']
-models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.8', '0.9']
+models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.7', '0.8', '0.9', '1.0']
 algorithms = ['rtim', 'rand_repeat', 'rand_no_repeat', 'opt_size']
 
 if __name__ == "__main__":
@@ -83,6 +83,8 @@ if __name__ == "__main__":
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")
         for model in args.models:
+            graph = {}
+            graph, _ = research_data.import_graph_data(args.dataset, model)
             size = optimal_size_mp.run(graph, args.dataset, model)
 
     if args.test:

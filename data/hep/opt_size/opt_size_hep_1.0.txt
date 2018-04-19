@@ -1,0 +1,6 @@
+Dataset: hep
+Model: 1.0
+Simulations: 1000
+Runtime: 0
+Optimal size found: 1781.0
+Optimal seed set size: 1781

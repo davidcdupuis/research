@@ -3,10 +3,10 @@
 import argparse
 
 datasets = ['small_graph', 'hep', 'hept', 'phy']
-models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.8', '0.9']
+models = ['wc', '0.1', '0.01', '0.3', '0.5','0.7', '0.8', '0.9', '1.0']
 
 def valid_models():
-    return ["wc", "0.1","0.01","0.5","0.9"]
+    return ["wc", "0.1", "0.01", "0.5", "0.7", "0.9", "1.0"]
 
 
 def import_graph_data(dataset, model="wc"):

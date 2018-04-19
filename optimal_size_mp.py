@@ -44,14 +44,12 @@ def save_data(dataset, model, opt_res, opt_size, num_sim):
 
     print("> Data saved to {}".format(file_name))
 
-def run(graph, dataset, model, num_sim=10000):
+def run(graph, dataset, model, num_sim=1000):
     '''
         Run optimal_size_mp to find optimal seed size
         Save results to file in folder
     '''
-    print("> Searching for optimal seed set size")
     result = find_opt_seed_size(graph, num_sim)
-    print(": Optimal Size finished running!")
     opt_size = ceil(result)
 
     print("Optimal seed size is {}".format(opt_size))
@@ -84,7 +82,7 @@ if __name__ == "__main__":
     print("---")
 
     graph = {}
-    graph, _ = research_data.import_graph_data(args.file, args.model)
+    graph, _ = research_data.import_graph_data(args.dataset, args.model)
 
     # opt_size = round(find_opt_seed_size(graph, args.number))
     # print("---")

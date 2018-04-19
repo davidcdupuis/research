@@ -1,0 +1,6 @@
+Dataset: phy
+Model: 0.3
+Simulations: 1000
+Runtime: 0
+Optimal size found: 3377.39
+Optimal seed set size: 3378
