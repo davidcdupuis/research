@@ -14,7 +14,6 @@ import plot
 datasets = ['small_graph', 'hep', 'hept', 'phy']
 models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.7', '0.8', '0.9', '1.0']
 algorithms = ['rtim', 'rand_repeat', 'rand_no_repeat', 'opt_size']
-reaches = ['100', '95', '90', '80', '70', '60', '50', '40', '30', '20', '10']
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
@@ -54,16 +53,12 @@ if __name__ == "__main__":
         msg = "Invalid arguments [algorithm] -> Received: {}"
         raise Exception(msg.format(args.algorithm))
 
-    if not set(args.reach).issubset(reaches):
-        msg = "Invalid arguments [reach] -> Received: {}"
-        raise Exception(msg.format(args.reach))
-
     print("-------- Parameters --------")
     print("Dataset \t [{}]".format(args.dataset))
     print("Models \t\t {}".format(args.models))
     print("Reach \t\t {}".format(args.reach))
     print("Algorithm \t [{}]".format(args.algorithm))
-    print("Simulation \t\t {}".format(args.simulations))
+    print("Simulations \t {}".format(args.simulations))
     print("Series \t\t {}".format(args.series))
     print("Pre-processing \t [{}]".format(args.pre))
     print("Live \t\t [{}]".format(args.live))

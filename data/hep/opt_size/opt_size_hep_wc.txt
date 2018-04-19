@@ -1,6 +1,0 @@
-Dataset: hep
-Model: wc
-Simulations: 1000
-Runtime: 0
-Optimal size found: 465.89
-Optimal seed set size: 466

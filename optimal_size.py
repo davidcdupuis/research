@@ -38,8 +38,8 @@ def sim_spread(graph, reach):
     non_activated_nodes = set(graph.keys())
     seed_size = 0
     endLimit = 100 - reach
-    capacityReach = len(graph.keys()) - len(graph.keys()) * endLimit / 100
-    while len(non_activated_nodes) >= capacityReach:
+    capacityReach = len(graph.keys()) * endLimit / 100
+    while len(non_activated_nodes) > capacityReach:
         curr = random.sample(non_activated_nodes, 1)[0]
         node_spread_sim(graph, curr, non_activated_nodes)
         seed_size += 1
