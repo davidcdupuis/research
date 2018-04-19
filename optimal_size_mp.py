@@ -11,7 +11,7 @@ from math import ceil
 
 run_time = 0
 
-def find_opt_seed_size(graph, num_sim):
+def find_opt_seed_size(graph, num_sim, reach):
     '''
         Returns optimal seed size for graph
     '''
@@ -19,7 +19,7 @@ def find_opt_seed_size(graph, num_sim):
     t0 = time.time()
     results = []
     with mp.Pool(mp.cpu_count()) as pool:
-        results = pool.map(sim_spread, [graph] * num_sim)
+        results = pool.starmap(sim_spread, [(graph, reach)]* num_sim)
 
     t1 = time.time()
     run_time = t1 - t0
@@ -28,32 +28,34 @@ def find_opt_seed_size(graph, num_sim):
     print("Optimal seed size found is: {}".format(round(avg)))
     return avg
 
-def save_data(dataset, model, opt_res, opt_size, num_sim):
+def save_data(dataset, model, reach, opt_res, opt_size, num_sim):
     '''
         Saves data to appropriate text file
     '''
     file_name = 'data/{0}/opt_size/opt_size_{0}_{1}.txt'
     file_name = file_name.format(dataset, model)
-    with open(file_name, 'w') as f:
+    with open(file_name, 'a') as f: # w for write and a for append
         f.write('Dataset: {}\n'.format(dataset))
         f.write('Model: {}\n'.format(model))
+        f.write('Reach: {}\n'.format(reach))
         f.write('Simulations: {}\n'.format(num_sim))
         f.write('Runtime: {}\n'.format(run_time))
         f.write('Optimal size found: {}\n'.format(opt_res))
         f.write('Optimal seed set size: {}\n'.format(opt_size))
+        f.write('-------------------------------------------------------------')
 
     print("> Data saved to {}".format(file_name))
 
-def run(graph, dataset, model, num_sim=1000):
+def run(graph, dataset, model, reach, num_sim=1000):
     '''
         Run optimal_size_mp to find optimal seed size
         Save results to file in folder
     '''
-    result = find_opt_seed_size(graph, num_sim)
+    result = find_opt_seed_size(graph, num_sim, reach)
     opt_size = ceil(result)
 
     print("Optimal seed size is {}".format(opt_size))
-    save_data(dataset, model, result, opt_size, num_sim)
+    save_data(dataset, model, reach, result, opt_size, num_sim)
 
 
 

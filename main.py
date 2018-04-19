@@ -14,6 +14,7 @@ import plot
 datasets = ['small_graph', 'hep', 'hept', 'phy']
 models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.7', '0.8', '0.9', '1.0']
 algorithms = ['rtim', 'rand_repeat', 'rand_no_repeat', 'opt_size']
+reaches = ['100', '95', '90', '80', '70', '60', '50', '40', '30', '20', '10']
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
@@ -33,6 +34,8 @@ if __name__ == "__main__":
                         help="RTIM: Test top and theta_ap parameters")
     parser.add_argument("--new", default=False, action="store_true",
                         help="Launch new test")
+    parser.add_argument("-r", "--reach", default=['100'], nargs='+',
+                        help='{}'.format(reaches))
     args = parser.parse_args()
 
     if args.dataset not in datasets:
@@ -49,9 +52,14 @@ if __name__ == "__main__":
         msg = "Invalid arguments [algorithm] -> Received: {}"
         raise Exception(msg.format(args.algorithm))
 
+    if not set(args.reach).issubset(reaches):
+        msg = "Invalid arguments [reach] -> Received: {}"
+        raise Exception(msg.format(args.reach))
+
     print("-------- Parameters --------")
     print("Dataset \t [{}]".format(args.dataset))
     print("Models \t\t {}".format(args.models))
+    print("Reach \t\t {}".format(args.reach))
     print("Algorithm \t [{}]".format(args.algorithm))
     print("Series \t\t {}".format(args.series))
     print("Pre-processing \t [{}]".format(args.pre))
@@ -83,9 +91,11 @@ if __name__ == "__main__":
     if args.algorithm == 'opt_size':
         print("Computing optimal size of seed set!")
         for model in args.models:
-            graph = {}
-            graph, _ = research_data.import_graph_data(args.dataset, model)
-            size = optimal_size_mp.run(graph, args.dataset, model)
+            for reach in args.reach:
+                graph = {}
+                graph, _ = research_data.import_graph_data(args.dataset, model)
+                size = optimal_size_mp.run(graph, args.dataset, model,
+                                           int(reach))
 
     if args.test:
         # tops = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80,
