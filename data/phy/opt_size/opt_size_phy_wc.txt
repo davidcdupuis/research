@@ -4,3 +4,43 @@ Simulations: 1000
 Runtime: 0
 Optimal size found: 5778.299
 Optimal seed set size: 5779
+Dataset: phy
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 0
+Optimal size found: 5776.8831
+Optimal seed set size: 5777
+-----------------------------------------------------------
+Dataset: phy
+Model: wc
+Reach: 95
+Simulations: 10000
+Runtime: 0
+Optimal size found: 5214.1553
+Optimal seed set size: 5215
+-----------------------------------------------------------
+Dataset: phy
+Model: wc
+Reach: 90
+Simulations: 10000
+Runtime: 0
+Optimal size found: 4707.5178
+Optimal seed set size: 4708
+-----------------------------------------------------------
+Dataset: phy
+Model: wc
+Reach: 80
+Simulations: 10000
+Runtime: 0
+Optimal size found: 3817.9249
+Optimal seed set size: 3818
+-----------------------------------------------------------
+Dataset: phy
+Model: wc
+Reach: 70
+Simulations: 10000
+Runtime: 0
+Optimal size found: 3055.4835
+Optimal seed set size: 3056
+-----------------------------------------------------------
