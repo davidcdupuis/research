@@ -9,26 +9,23 @@ from optimal_size import sim_spread, num_seed_sets
 import research_data
 from math import ceil
 
-run_time = 0
 
 def find_opt_seed_size(graph, num_sim, reach):
     '''
         Returns optimal seed size for graph
     '''
     print("> Searching for optimal seed set size")
-    t0 = time.time()
+
     results = []
     with mp.Pool(mp.cpu_count()) as pool:
         results = pool.starmap(sim_spread, [(graph, reach)]* num_sim)
 
-    t1 = time.time()
-    run_time = t1 - t0
-    print(": Optimal seed set size found in {} seconds".format(run_time))
     avg = sum(results) / len(results)
     print("Optimal seed size found is: {}".format(round(avg)))
     return avg
 
-def save_data(dataset, model, reach, opt_res, opt_size, num_sim):
+
+def save_data(dataset, model, reach, opt_res, opt_size, num_sim, run_time):
     '''
         Saves data to appropriate text file
     '''
@@ -46,16 +43,20 @@ def save_data(dataset, model, reach, opt_res, opt_size, num_sim):
 
     print("> Data saved to {}".format(file_name))
 
+
 def run(graph, dataset, model, reach, num_sim=1000):
     '''
         Run optimal_size_mp to find optimal seed size
         Save results to file in folder
     '''
+    t0 = time.time()
     result = find_opt_seed_size(graph, num_sim, reach)
     opt_size = ceil(result)
-
+    t1 = time.time()
+    run_time = t1 - t0
+    print("Optimal seed set size found in {} seconds".format(run_time))
     print("Optimal seed size is {}".format(opt_size))
-    save_data(dataset, model, reach, result, opt_size, num_sim)
+    save_data(dataset, model, reach, result, opt_size, num_sim, run_time)
 
 
 

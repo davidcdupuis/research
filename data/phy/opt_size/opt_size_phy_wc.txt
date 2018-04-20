@@ -4,6 +4,7 @@ Simulations: 1000
 Runtime: 0
 Optimal size found: 5778.299
 Optimal seed set size: 5779
+-----------------------------------------------------------
 Dataset: phy
 Model: wc
 Reach: 100

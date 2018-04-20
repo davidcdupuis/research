@@ -4,3 +4,4 @@ Simulations: 10000
 Runtime: 0
 Optimal size found: 5035.3709
 Optimal seed set size: 5035
+-----------------------------------------------------------

@@ -4,6 +4,7 @@ Simulations: 10000
 Runtime: 0
 Optimal size found: 12182.5436
 Optimal seed set size: 12183
+-----------------------------------------------------------
 Dataset: hep
 Model: 0.1
 Reach: 95
