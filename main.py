@@ -35,8 +35,7 @@ if __name__ == "__main__":
                         help="RTIM: Test top and theta_ap parameters")
     parser.add_argument("--new", default=False, action="store_true",
                         help="Launch new test")
-    parser.add_argument("-r", "--reach", default=['100'], nargs='+',
-                        help='{}'.format(reaches))
+    parser.add_argument("-r", "--reach", default=['100'], nargs='+')
     args = parser.parse_args()
 
     if args.dataset not in datasets:

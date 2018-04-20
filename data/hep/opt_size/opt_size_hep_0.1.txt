@@ -4,3 +4,83 @@ Simulations: 10000
 Runtime: 0
 Optimal size found: 12182.5436
 Optimal seed set size: 12183
+Dataset: hep
+Model: 0.1
+Reach: 95
+Simulations: 10000
+Runtime: 0
+Optimal size found: 11427.0542
+Optimal seed set size: 11428
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 90
+Simulations: 10000
+Runtime: 0
+Optimal size found: 10679.8916
+Optimal seed set size: 10680
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 80
+Simulations: 10000
+Runtime: 0
+Optimal size found: 9219.9569
+Optimal seed set size: 9220
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 70
+Simulations: 10000
+Runtime: 0
+Optimal size found: 7805.0244
+Optimal seed set size: 7806
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 60
+Simulations: 10000
+Runtime: 0
+Optimal size found: 6433.0206
+Optimal seed set size: 6434
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 50
+Simulations: 10000
+Runtime: 0
+Optimal size found: 5113.5694
+Optimal seed set size: 5114
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 40
+Simulations: 10000
+Runtime: 0
+Optimal size found: 3848.2034
+Optimal seed set size: 3849
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 30
+Simulations: 10000
+Runtime: 0
+Optimal size found: 2643.2136
+Optimal seed set size: 2644
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 20
+Simulations: 10000
+Runtime: 0
+Optimal size found: 1515.4453
+Optimal seed set size: 1516
+-----------------------------------------------------------
+Dataset: hep
+Model: 0.1
+Reach: 10
+Simulations: 10000
+Runtime: 0
+Optimal size found: 496.7173
+Optimal seed set size: 497
+-----------------------------------------------------------
