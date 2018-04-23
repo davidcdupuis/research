@@ -36,7 +36,7 @@ def save_data(dataset, model, reach, opt_res, opt_size, num_sim, run_time):
         f.write('Model: {}\n'.format(model))
         f.write('Reach: {}\n'.format(reach))
         f.write('Simulations: {}\n'.format(num_sim))
-        f.write('Runtime: {}\n'.format(run_time))
+        f.write('Runtime: {} seconds\n'.format(run_time))
         f.write('Optimal size found: {}\n'.format(opt_res))
         f.write('Optimal seed set size: {}\n'.format(opt_size))
         f.write('-----------------------------------------------------------\n')
