@@ -5,3 +5,91 @@ Runtime: 0
 Optimal size found: 654.796
 Optimal seed set size: 655
 -----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 100
+Simulations: 10000
+Runtime: 548.314980506897 seconds
+Optimal size found: 654.8548
+Optimal seed set size: 655
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 95
+Simulations: 10000
+Runtime: 541.0540018081665 seconds
+Optimal size found: 242.1259
+Optimal seed set size: 243
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 90
+Simulations: 10000
+Runtime: 538.0498807430267 seconds
+Optimal size found: 2.0973
+Optimal seed set size: 3
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 80
+Simulations: 10000
+Runtime: 538.6413524150848 seconds
+Optimal size found: 1.1089
+Optimal seed set size: 2
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 70
+Simulations: 10000
+Runtime: 537.1460163593292 seconds
+Optimal size found: 1.1073
+Optimal seed set size: 2
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 60
+Simulations: 10000
+Runtime: 538.9127721786499 seconds
+Optimal size found: 1.1093
+Optimal seed set size: 2
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 50
+Simulations: 10000
+Runtime: 539.2887425422668 seconds
+Optimal size found: 1.1052
+Optimal seed set size: 2
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 40
+Simulations: 10000
+Runtime: 536.9989995956421 seconds
+Optimal size found: 1.1151
+Optimal seed set size: 2
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 30
+Simulations: 10000
+Runtime: 537.31449842453 seconds
+Optimal size found: 1.114
+Optimal seed set size: 2
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 20
+Simulations: 10000
+Runtime: 538.8960361480713 seconds
+Optimal size found: 1.1168
+Optimal seed set size: 2
+-----------------------------------------------------------
+Dataset: phy
+Model: 0.8
+Reach: 10
+Simulations: 10000
+Runtime: 538.0141770839691 seconds
+Optimal size found: 1.1103
+Optimal seed set size: 2
+-----------------------------------------------------------
