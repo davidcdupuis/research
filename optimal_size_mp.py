@@ -75,6 +75,7 @@ def run(graph, dataset, model, reach, num_sim=1000):
     file_name = 'data/{0}/opt_size/opt_size_{0}_{1}_{2}.png'
     file_name = file_name.format(dataset, model, reach)
     plt.savefig(file_name)
+    plt.close()
     print("Saved figure to png")
     save_data(dataset, model, reach, avg, opt_size, num_sim, run_time, best)
 
