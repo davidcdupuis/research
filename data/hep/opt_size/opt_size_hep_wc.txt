@@ -86,3 +86,12 @@ Runtime: 0
 Optimal size found: 466.7278
 Optimal seed set size: 467
 -----------------------------------------------------------
+Dataset: hep
+Model: wc
+Reach: 100
+Simulations: 100
+Runtime: 124.46830749511719 seconds
+Best size: 7426
+Optimal size found: 7585.6
+Optimal seed set size: 7586
+-----------------------------------------------------------

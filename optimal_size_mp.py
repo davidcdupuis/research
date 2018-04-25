@@ -8,6 +8,8 @@ import argparse
 from optimal_size import sim_spread, num_seed_sets
 import research_data
 from math import ceil
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
 def find_opt_seed_size(graph, num_sim, reach):
@@ -20,12 +22,13 @@ def find_opt_seed_size(graph, num_sim, reach):
     with mp.Pool(mp.cpu_count()) as pool:
         results = pool.starmap(sim_spread, [(graph, reach)]* num_sim)
 
-    avg = sum(results) / len(results)
-    print("Optimal seed size found is: {}".format(round(avg)))
-    return avg
+    #best = min(results)
+    #avg = sum(results) / len(results)
+    #print("Optimal seed size found is: {}".format(round(avg)))
+    return results #avg, best
 
 
-def save_data(dataset, model, reach, opt_res, opt_size, num_sim, run_time):
+def save_data(dataset, model, reach, opt_res, opt_size, num_sim, run_time, best):
     '''
         Saves data to appropriate text file
     '''
@@ -37,6 +40,7 @@ def save_data(dataset, model, reach, opt_res, opt_size, num_sim, run_time):
         f.write('Reach: {}\n'.format(reach))
         f.write('Simulations: {}\n'.format(num_sim))
         f.write('Runtime: {} seconds\n'.format(run_time))
+        f.write('Best size: {}\n'.format(best))
         f.write('Optimal size found: {}\n'.format(opt_res))
         f.write('Optimal seed set size: {}\n'.format(opt_size))
         f.write('-----------------------------------------------------------\n')
@@ -50,14 +54,35 @@ def run(graph, dataset, model, reach, num_sim=1000):
         Save results to file in folder
     '''
     t0 = time.time()
-    result = find_opt_seed_size(graph, num_sim, reach)
-    opt_size = ceil(result)
+    results = find_opt_seed_size(graph, num_sim, reach)
+    avg = sum(results) / len(results)
+    opt_size = ceil(avg)
     t1 = time.time()
     run_time = t1 - t0
+
+    best = min(results)
     print("Optimal seed set size found in {} seconds".format(run_time))
     print("Optimal seed size is {}".format(opt_size))
-    save_data(dataset, model, reach, result, opt_size, num_sim, run_time)
 
+    # plot simulation convergence of results
+    df = pd.DataFrame([{'simulations':i+1,'size':sum(results[:i+1])/len(results[:i+1])} for i in range(len(results))])
+
+    plt.plot(df['simulations'],df['size'],color='blue',label='opt_size')
+    plt.xlabel('simulations')
+    plt.ylabel('size')
+    plt.legend()
+    plt.title('Evolution of opt_size vs simulations for {}'.format(dataset))
+    file_name = 'data/{0}/opt_size/opt_size_{0}_{1}_{2}.png'
+    file_name = file_name.format(dataset, model, reach)
+    plt.savefig(file_name)
+    print("Saved figure to png")
+    save_data(dataset, model, reach, avg, opt_size, num_sim, run_time, best)
+
+
+def plotResults(results):
+    '''
+        Plot results to view convergence
+    '''
 
 
 if __name__ == "__main__":
