@@ -65,9 +65,10 @@ def run(graph, dataset, model, reach, num_sim=1000):
     print("Optimal seed size is {}".format(opt_size))
 
     # plot simulation convergence of results
-    df = pd.DataFrame([{'simulations':i+1,'size':sum(results[:i+1])/len(results[:i+1])} for i in range(len(results))])
+    df = pd.DataFrame([{'simulations':i+1,'size':sum(results[:i+1])/len(results[:i+1]), 'min':min(results[:i+1])} for i in range(len(results)-1)])
 
     plt.plot(df['simulations'],df['size'],color='blue',label='opt_size')
+    plt.plot(df['simulations'],df['min'],color='red',label='local_min')
     plt.xlabel('simulations')
     plt.ylabel('size')
     plt.legend()
