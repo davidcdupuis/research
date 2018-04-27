@@ -8,8 +8,10 @@
 import argparse
 import csv
 
-datasets = ['small_graph', 'hep', 'hept', 'phy', 'dblp', 'youtube']
+datasets = ['small_graph', 'hep', 'hept', 'phy', 'dblp', 'youtube', 'orkut',
+            'friendster', 'livejournal']
 algorithms = ['undirToDir', 'computeWC']
+
 
 def undirToDir(dataset, import_file):
     '''
@@ -48,25 +50,39 @@ def computeWC(dataset):
         - Compute weights for all edges
         - Save graph under dataset_wc.inf
     '''
-    graph = {}
-    import_dir = "data/{0}/{0}".format(dataset)
+    # Build inverse influence graph
+    inv_graph = {}
+    import_dir = "data/{0}/{0}.inf".format(dataset)
+    print("Importing {}".format(import_dir))
     with open(import_dir, 'r') as file:
         reader = csv.reader(file, delimiter=' ')
         for line in reader:
             user1 = int(line[0])
             user2 = int(line[1])
-            if user1 not in graph:
-                graph[user1] = {}
-            if user2 not in graph:
-                graph[user2] = {}
-            graph[user1][user2] = {}
-            graph[user2][user1] = {}
-            #import correctly
+            if user1 not in inv_graph:
+                inv_graph[user1] = {}
+            if user2 not in inv_graph:
+                inv_graph[user2] = {}
+            inv_graph[user2][user1] = 0
+    print("Graph {} imported correctly".format(dataset))
 
+    print("Computing and saving edge weights")
     export_dir = "data/{0}/{0}_wc.inf".format(dataset)
-    with open(export_dir, 'w') as file:
+    count = 0
+    with open(export_dir, 'w', newline='') as file:
         writer = csv.writer(file, delimiter=' ')
-        # write every edge of graph to  file
+        for user in inv_graph.keys():
+            num = len(inv_graph[user].keys())
+            for influencer in inv_graph[user].keys():
+                count += 1
+                inv_graph[user][influencer] = 1.0/num
+                writer.writerow([influencer, user, inv_graph[user][influencer]])
+                if ((count < 1000000 and count % 100000 == 0)
+                    or (count < 10000000 and count % 2000000 == 0)
+                    or (count < 100000000 and count % 20000000 == 0)
+                    or (count >= 100000000 and count % 100000000 == 0)):
+                    print("Processed {} edges!".format(count))
+    print("Weights computed successfully and saved to {}".format(export_dir))
 
 
 if __name__ == "__main__":
