@@ -9,8 +9,8 @@ import argparse
 import csv
 
 datasets = ['small_graph', 'hep', 'hept', 'phy', 'dblp', 'youtube', 'orkut',
-            'friendster', 'livejournal']
-algorithms = ['undirToDir', 'computeWC']
+            'friendster', 'livejournal', 'twitter']
+algorithms = ['undirToDir', 'computeWC', 'processTwitterDataset']
 
 
 def undirToDir(dataset, import_file):
@@ -85,6 +85,44 @@ def computeWC(dataset):
     print("Weights computed successfully and saved to {}".format(export_dir))
 
 
+def processTwitterDataset(dataset, import_file):
+    '''
+        Function to process directed twitter file with tab separator
+    '''
+    # Build inverse influence graph
+    inv_graph = {}
+    import_dir = "data/{}/{}".format(dataset, import_file)
+    print("Importing {}".format(import_dir))
+    with open(import_dir, 'r') as file:
+        reader = csv.reader(file, delimiter='\t')
+        for line in reader:
+            user1 = int(line[0])
+            user2 = int(line[1])
+            if user1 not in inv_graph:
+                inv_graph[user1] = {}
+            if user2 not in inv_graph:
+                inv_graph[user2] = {}
+            inv_graph[user2][user1] = 0
+    print("Graph {} imported correctly".format(dataset))
+
+    print("Computing and saving edge weights")
+    export_dir = "data/{0}/{0}_wc.inf".format(dataset)
+    count = 0
+    with open(export_dir, 'w', newline='') as file:
+        writer = csv.writer(file, delimiter=' ')
+        for user in inv_graph.keys():
+            num = len(inv_graph[user].keys())
+            for influencer in inv_graph[user].keys():
+                count += 1
+                inv_graph[user][influencer] = 1.0/num
+                writer.writerow([influencer, user, inv_graph[user][influencer]])
+                if ((count < 1000000 and count % 100000 == 0)
+                    or (count < 10000000 and count % 2000000 == 0)
+                    or (count < 100000000 and count % 20000000 == 0)
+                    or (count >= 100000000 and count % 100000000 == 0)):
+                    print("Processed {} edges!".format(count))
+    print("Weights computed successfully and saved to {}".format(export_dir))
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Graph Initialization")
     parser.add_argument('-a','--algorithm', help='{}'.format(algorithms))
@@ -101,8 +139,14 @@ if __name__ == "__main__":
     if args.algorithm == 'undirToDir' and args.file == None:
         raise Exception("File name not specified!")
 
+    if args.algorithm == 'processTwitterDataset' and args.file == None:
+        raise Exception("File name not specified!")
+
     if args.algorithm == 'undirToDir':
         undirToDir(args.dataset, args.file)
 
     if args.algorithm == 'computeWC':
         computeWC(args.dataset)
+
+    if args.algorithm == 'processTwitterDataset' and args.file != None:
+        processTwitterDataset(args.dataset, args.file)
