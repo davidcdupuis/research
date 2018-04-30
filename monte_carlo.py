@@ -53,7 +53,7 @@ def inf_score_est_mp(graph, seed, num_sim=10000, timed=False):
         Computes influence spread using Monte Carlo and
         Multiprocessing
     '''
-    print("> Computing influence spread for seed with multiprocessing")
+    # print("> Computing influence spread for seed with multiprocessing")
     t0 = time.time()
     inf_score = 0
     results = []

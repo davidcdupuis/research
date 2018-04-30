@@ -1,10 +1,6 @@
 #!/usr/bin/python3
 '''
-  RTIM: our Real-Time Bidding Influence Maximization Strategy
-
-  Takes place in two steps:
-    * pre-processing: compute independent influence score of all nodes
-    * live: compute activation probability of available node
+  RTIM Queue for multiprocessing
 '''
 import csv
 from multiprocessing import Process, Queue, Lock, cpu_count
@@ -130,7 +126,7 @@ def rtim_inf_scores(graph, dataset, model):
         p.join()
 
     # Send STOP signal to writer
-    # If this  signal is not sent, process will nevere end!
+    # If this  signal is not sent, process will never end!
     result_queue.put(SENTINEL)
     writer.join()
 
