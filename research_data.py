@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
+import time
 
 datasets = ['small_graph', 'hep', 'hept', 'phy']
 models = ['wc', '0.1', '0.01', '0.3', '0.5','0.7', '0.8', '0.9', '1.0']
@@ -19,6 +20,7 @@ def import_graph_data(dataset, model="wc"):
     inf_network = {}
     conditions = []
     condict = {}
+    t = time.time()
     with open(file_name, 'r') as f:
         next(f)
         for line in f:
@@ -45,12 +47,13 @@ def import_graph_data(dataset, model="wc"):
                 condict[user1] += 1
                 conditions.append((user1, user2))
 
-    print(": Done importing {}".format(file_name))
-    num = {}
-    for key in condict:
-        if condict[key] not in num:
-            num[condict[key]] = 0
-        num[condict[key]] += 1
+    msg = ": Done importing {} in {} seconds"
+    print(msg.format(file_name, round(time.time() - t, 4)))
+    # num = {}
+    # for key in condict:
+    #     if condict[key] not in num:
+    #         num[condict[key]] = 0
+    #     num[condict[key]] += 1
 
     # print(num)
     return (inf_network, conditions)

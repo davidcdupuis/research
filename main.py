@@ -14,7 +14,7 @@ import plot
 datasets = ['small_graph', 'hep', 'hept', 'phy', 'dblp', 'youtube', 'orkut',
             'friendster', 'livejournal']
 models = ['wc', '0.1', '0.01', '0.3', '0.5', '0.7', '0.8', '0.9', '1.0']
-algorithms = ['rtim', 'rand_repeat', 'rand_no_repeat', 'opt_size']
+algorithms = ['rtim', 'rand_repeat', 'rand_no_repeat', 'opt_size', 'test_import']
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Main")
@@ -113,3 +113,9 @@ if __name__ == "__main__":
                         if new:
                             new = False
             # plot.rtim_plot_test_parameters(args.dataset)
+
+    # run import only to test import time of large datasets
+    if args.algorithm == 'test_import':
+        for model in args.models:
+            graph = {}
+            graph, _ = research_data.import_graph_data(args.dataset, model)

@@ -86,10 +86,10 @@ def computeWC(dataset):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Graph Initlization")
-    parser.add_argument('-a','--algorithm', help=algorithms)
+    parser = argparse.ArgumentParser(description="Graph Initialization")
+    parser.add_argument('-a','--algorithm', help='{}'.format(algorithms))
     parser.add_argument('-d', '--dataset', default='small_graph',
-                        help=datasets)
+                        help='{}'.format(datasets))
     parser.add_argument('-f', '--file')
     args = parser.parse_args()
 
