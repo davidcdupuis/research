@@ -7,6 +7,7 @@ from multiprocessing import Process, Queue, Lock, cpu_count
 from monte_carlo import monte_carlo_inf_score_est
 import argparse
 import research_data
+import math
 
 THETA_AP = 0.8
 
@@ -66,11 +67,13 @@ class Worker(Process):
     _queue = None
     _lock = None
     _graph = None
+    _depth = None
 
-    def __init__(self, queue, graph, result_queue):
+    def __init__(self, queue, graph, result_queue, depth):
         self._queue = queue
         self._graph = graph
         self._result_queue = result_queue
+        self._depth = depth
         super(Worker, self).__init__()
 
     def run(self):
@@ -80,11 +83,12 @@ class Worker(Process):
                 self._queue.put(SENTINEL)
                 break
 
-            res = monte_carlo_inf_score_est(self._graph, [node])
+            res = monte_carlo_inf_score_est(self._graph, [node],
+                                            mc_depth=self._depth)
             self._result_queue.put([node, res])
 
 
-def rtim_inf_scores(graph, dataset, model):
+def rtim_inf_scores(graph, dataset, model, mc_depth):
     """Launch process for computation.
 
     Launch:
@@ -111,7 +115,7 @@ def rtim_inf_scores(graph, dataset, model):
 
     # Instantiate  workers
     for i in range(cpu_count() - 2):
-        p = Worker(queue, graph, result_queue)
+        p = Worker(queue, graph, result_queue, mc_depth)
         processes.append(p)
 
     # Launch workers

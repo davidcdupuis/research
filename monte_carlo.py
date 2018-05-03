@@ -7,26 +7,27 @@
 import random
 import time
 import multiprocessing as mp
+import math
 
 
 def influenced(prob):
     return random.random() < prob
 
 
-def monte_carlo_inf_score_est(graph, seed, num_sim=10000):
+def monte_carlo_inf_score_est(graph, seed, num_sim=10000, mc_depth=math.inf):
     '''
         Performs num_sim influence simulations from seed on graph
         Returns Monte Carlo influence score of seed in graph
     '''
     inf_score = 0
     for i in range(1,  num_sim + 1):
-        activated = random_walk(graph,  seed)
+        activated = random_walk(graph,  seed, mc_depth)
         # update inf_score as streaming average during simulation
         inf_score = inf_score + (activated - inf_score)/float(i)
     return inf_score
 
 
-def random_walk(graph,  seed):
+def random_walk(graph,  seed, max_depth=math.inf):
     '''
         Performs a random walk from seed nodes on graph
         Returns number of activated nodes + size of seed set.
@@ -36,19 +37,23 @@ def random_walk(graph,  seed):
     activated_nodes = set()
     [activated_nodes.add(e) for e in seed]
     for node in seed:
-        q = [node]
+        q = [(node, 0)]
         while q:
             curr = q.pop(0)
+            curr_node = curr[0]
+            curr_depth = curr[1]
             activated += 1
-            for neighbor in graph[curr]:
+            for neighbor in graph[curr_node]:
                 if (neighbor not in activated_nodes and
-                        influenced(graph[curr][neighbor])):
+                        influenced(graph[curr_node][neighbor])):
                     activated_nodes.add(neighbor)
-                    q.append(neighbor)
+                    if curr_depth + 1 < max_depth:
+                        q.append((neighbor, curr_depth + 1))
     return activated
 
 
-def inf_score_est_mp(graph, seed, num_sim=10000, timed=False):
+def inf_score_est_mp(graph, seed, num_sim=10000, timed=False,
+                        mc_depth=math.inf):
     '''
         Computes influence spread using Monte Carlo and
         Multiprocessing
@@ -58,7 +63,7 @@ def inf_score_est_mp(graph, seed, num_sim=10000, timed=False):
     inf_score = 0
     results = []
     with mp.Pool(mp.cpu_count()) as pool:
-        results = pool.starmap(random_walk, [(graph, seed)] * num_sim)
+        results = pool.starmap(random_walk, [(graph, seed, mc_depth)] * num_sim)
     inf_score = sum(results) / float(len(results))
     if timed:
         print(": Monte Carlo method finished computing in {} seconds".format(

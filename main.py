@@ -10,6 +10,7 @@ import random_im
 import optimal_size_mp
 import research_data
 import plot
+import math
 
 datasets = ['small_graph', 'hep', 'hept', 'phy', 'dblp', 'youtube', 'orkut',
             'friendster', 'livejournal', 'twitter']
@@ -37,6 +38,7 @@ if __name__ == "__main__":
     parser.add_argument("--new", default=False, action="store_true",
                         help="Launch new test")
     parser.add_argument("-r", "--reach", default=['100'], nargs='+')
+    parser.add_argument("--depth", type=int, default=math.inf)
     args = parser.parse_args()
 
     if args.dataset not in datasets:
@@ -71,7 +73,7 @@ if __name__ == "__main__":
             graph = {}
             graph, _ = research_data.import_graph_data(args.dataset, model)
             if args.algorithm == 'rtim':
-                rtim.run_pre_processing(graph, args.dataset, model)
+                rtim.run_pre_processing(graph, args.dataset, model, args.depth)
 
     if args.live and args.algorithm != 'opt_size':
         print("Launched {} live!".format(args.algorithm))

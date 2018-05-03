@@ -16,6 +16,7 @@ import csv
 import random
 from rtim_queue import rtim_inf_scores
 import plot
+import math
 
 theta_ap = 0.8
 preProc_time = -1
@@ -139,7 +140,7 @@ def save_seed(seeds, inf_spread, dataset, model, series='0'):
     print("> Seed set saved.")
 
 
-def run_pre_processing(graph, dataset, model):
+def run_pre_processing(graph, dataset, model, mc_depth=math.inf):
     '''
         Runs pre-processing part of RTIM
         returns graph_values with [inf, ap], as well as influence_threshold
@@ -147,7 +148,7 @@ def run_pre_processing(graph, dataset, model):
     '''
     print("> RTIM is Pre-Processing: {} - {}".format(dataset, model))
     t0 = time.time()
-    rtim_inf_scores(graph, dataset, model)
+    rtim_inf_scores(graph, dataset, model, mc_depth)
     t1 = time.time()
     t = t1 - t0
     print(": Pre-Processing is over in {} seconds".format(t))
