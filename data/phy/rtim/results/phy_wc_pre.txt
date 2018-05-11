@@ -1,4 +1,4 @@
 RTIM pre-processing data
 Dataset: phy
 Dataset model: wc
-Computation time: 254.90448904037476 seconds
+Computation time: 57.3160834312439 seconds

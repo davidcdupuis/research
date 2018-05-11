@@ -1,0 +1,4 @@
+RTIM pre-processing data
+Dataset: livejournal
+Dataset model: wc
+Computation time: 18355.577872753143 seconds

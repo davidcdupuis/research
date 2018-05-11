@@ -1,4 +1,4 @@
 RTIM pre-processing data
 Dataset: small_graph
 Dataset model: wc
-Computation time: 0.18071460723876953 seconds
+Computation time: 0.17651820182800293 seconds

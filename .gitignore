@@ -6,19 +6,23 @@ __pycache__
 
 # ignore large files
 data/youtube/youtube_wc.inf
+data/youtube/rtim/inf_scores/youtube_wc_inf_scores.csv
 
 data/livejournal/com-lj.ungraph.txt.gz
 data/livejournal/com-lj.ungraph.txt
 data/livejournal/livejournal.inf
 data/livejournal/livejournal_wc.inf
+data/livejournal/rtim/inf_scores/livejournal_wc_inf_scores.csv
 
 data/orkut/com-orkut.ungraph.txt.gz
 data/orkut/com-orkut.ungraph.txt
 data/orkut/orkut.inf
 data/orkut/orkut_wc.inf
+data/orkut/rtim/inf_scores/orkut_wc_inf_scores.csv
 
 data/twitter/twitter.inf
 data/twitter/twitter_wc.inf
+data/twitter/rtim/inf_scores/orkut_wc_inf_scores.csv
 
 data/friendster/com-friendster.ungraph.txt.gz
 data/friendster/com-friendster.ungraph.txt
