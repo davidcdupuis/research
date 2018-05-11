@@ -41,3 +41,219 @@ Best size: 1
 Optimal size found: 8.5343
 Optimal seed set size: 9
 -----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 9.623004674911499 seconds
+Best size: 7
+Optimal size found: 12.2
+Optimal seed set size: 13
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 9.593122005462646 seconds
+Best size: 8
+Optimal size found: 11.9
+Optimal seed set size: 12
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 14.757197141647339 seconds
+Best size: 5
+Optimal size found: 11.1
+Optimal seed set size: 12
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 18.958208084106445 seconds
+Best size: 8
+Optimal size found: 10.2
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 14.947495937347412 seconds
+Best size: 6
+Optimal size found: 8.8
+Optimal seed set size: 9
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 18.50872540473938 seconds
+Best size: 8
+Optimal size found: 10.5
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 15.120853185653687 seconds
+Best size: 10
+Optimal size found: 12.5
+Optimal seed set size: 13
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 18.87215495109558 seconds
+Best size: 6
+Optimal size found: 10.2
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 4.949963569641113 seconds
+Best size: 9
+Optimal size found: 10.5
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 1000
+Runtime: 6.598485708236694 seconds
+Best size: 2
+Optimal size found: 7.345
+Optimal seed set size: 8
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 24.25101923942566 seconds
+Best size: 3
+Optimal size found: 7.2613
+Optimal seed set size: 8
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 23.74461841583252 seconds
+Best size: 2
+Optimal size found: 7.2527
+Optimal seed set size: 8
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 46.07762932777405 seconds
+Best size: 2
+Optimal size found: 7.2363
+Optimal seed set size: 8
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 1
+Runtime: 9.604010820388794 seconds
+Best size: 5
+Optimal size found: 5.0
+Optimal seed set size: 5
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 9.961101293563843 seconds
+Best size: 6
+Optimal size found: 8.1
+Optimal seed set size: 9
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10
+Runtime: 9.470293283462524 seconds
+Best size: 5
+Optimal size found: 6.9
+Optimal seed set size: 7
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 1000
+Runtime: 11.842638731002808 seconds
+Best size: 3
+Optimal size found: 7.258
+Optimal seed set size: 8
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 1000
+Runtime: 14.710143327713013 seconds
+Best size: 3
+Optimal size found: 9.965
+Optimal seed set size: 10
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 13.364304304122925 seconds
+Best size: 2
+Optimal size found: 10.0358
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 11.932016849517822 seconds
+Best size: 2
+Optimal size found: 7.2632
+Optimal seed set size: 8
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 11.459978580474854 seconds
+Best size: 2
+Optimal size found: 9.9919
+Optimal seed set size: 10
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 11.961219549179077 seconds
+Best size: 2
+Optimal size found: 10.0138
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 12.043972492218018 seconds
+Best size: 3
+Optimal size found: 10.0078
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 100
+Runtime: 11.796010971069336 seconds
+Best size: 4
+Optimal size found: 10.0
+Optimal seed set size: 10
+-----------------------------------------------------------

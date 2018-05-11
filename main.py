@@ -11,6 +11,7 @@ import optimal_size_mp
 import research_data
 import plot
 import math
+import args
 
 datasets = ['small_graph', 'hep', 'hept', 'phy', 'dblp', 'youtube', 'orkut',
             'friendster', 'livejournal', 'twitter']
@@ -66,11 +67,12 @@ if __name__ == "__main__":
     print("Live \t\t [{}]".format(args.live))
     print("----------------------------")
 
+    # args = args.getArguments("Main")
+
     if (args.pre and args.algorithm != 'random_im'
         and args.algorithm != 'opt_size'):
         print("Launched {} pre-processing!".format(args.algorithm))
         for model in args.models:
-            graph = {}
             graph, _ = research_data.import_graph_data(args.dataset, model)
             if args.algorithm == 'rtim':
                 rtim.run_pre_processing(graph, args.dataset, model, args.depth)
@@ -78,7 +80,6 @@ if __name__ == "__main__":
     if args.live and args.algorithm != 'opt_size':
         print("Launched {} live!".format(args.algorithm))
         for model in args.models:
-            graph = {}
             graph, _ = research_data.import_graph_data(args.dataset, model)
             for serie in args.series:
                 if args.algorithm == 'rtim':
@@ -92,10 +93,10 @@ if __name__ == "__main__":
         print("Computing optimal size of seed set!")
         for model in args.models:
             for reach in args.reach:
-                graph = {}
-                graph, _ = research_data.import_graph_data(args.dataset, model)
+                graph, guar = research_data.import_graph_data(args.dataset,
+                                                                model)
                 size = optimal_size_mp.run(graph, args.dataset, model,
-                                           int(reach), args.simulations)
+                                           int(reach), guar, args.simulations)
 
     if args.test:
         # tops = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80,
@@ -104,7 +105,6 @@ if __name__ == "__main__":
         theta_aps = [0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
         new = False
         for model in args.models:
-            graph = {}
             graph, _ = research_data.import_graph_data(args.dataset, model)
             for serie in args.series:
                 for thresh in theta_aps:
@@ -119,5 +119,4 @@ if __name__ == "__main__":
     # run import only to test import time of large datasets
     if args.algorithm == 'test_import':
         for model in args.models:
-            graph = {}
             graph, _ = research_data.import_graph_data(args.dataset, model)

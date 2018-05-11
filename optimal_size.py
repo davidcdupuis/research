@@ -31,7 +31,7 @@ def node_spread_sim(graph, node, non_activated_nodes):
                 q.append(neighbor)
 
 
-def sim_spread(graph, reach):
+def sim_spread(graph, reach, dataset, model, guaranteed):
     '''
         Get number of nodes to target to touch reach
     '''
@@ -39,11 +39,17 @@ def sim_spread(graph, reach):
     seed_size = 0
     endLimit = 100 - reach
     capacityReach = len(graph.keys()) * endLimit / 100
+    selected = []
+
     while len(non_activated_nodes) > capacityReach:
+        # we never pick a node that is guaranteed to be activated
+        #  - guaranteed
         curr = random.sample(non_activated_nodes, 1)[0]
         node_spread_sim(graph, curr, non_activated_nodes)
         seed_size += 1
-    return seed_size
+        selected.append(curr)
+
+    return seed_size, selected
 
 
 def num_seed_sets(n, k=0, g=0):

@@ -12,20 +12,29 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def find_opt_seed_size(graph, num_sim, reach):
+def find_opt_seed_size(graph, num_sim, reach, dataset, model, guaranteed):
     '''
         Returns optimal seed size for graph
     '''
     print("> Searching for optimal seed set size")
 
+    file_path = 'data/{0}/sim/{0}_{1}_sets.csv'.format(dataset, model)
+    with open(file_path, 'w') as f:
+        pass
+
     results = []
     with mp.Pool(mp.cpu_count()) as pool:
-        results = pool.starmap(sim_spread, [(graph, reach)]* num_sim)
+        results = pool.starmap(sim_spread, [(graph, reach, dataset,
+                                        model, guaranteed)]* num_sim)
+    scores = []
+    with open(file_path, 'a') as f:
+        for result in results:
+            scores.append(result[0])
+            for item in result[1]:
+                f.write("{} ".format(item))
+            f.write("\n")
 
-    #best = min(results)
-    #avg = sum(results) / len(results)
-    #print("Optimal seed size found is: {}".format(round(avg)))
-    return results #avg, best
+    return scores
 
 
 def save_data(dataset, model, reach, opt_res, opt_size, num_sim, run_time, best):
@@ -48,13 +57,14 @@ def save_data(dataset, model, reach, opt_res, opt_size, num_sim, run_time, best)
     print("> Data saved to {}".format(file_name))
 
 
-def run(graph, dataset, model, reach, num_sim=1000):
+def run(graph, dataset, model, reach, guaranteed, num_sim=1000):
     '''
         Run optimal_size_mp to find optimal seed size
         Save results to file in folder
     '''
     t0 = time.time()
-    results = find_opt_seed_size(graph, num_sim, reach)
+    results = find_opt_seed_size(graph, num_sim, reach, dataset, model,
+                                    guaranteed)
     avg = sum(results) / len(results)
     opt_size = ceil(avg)
     t1 = time.time()
@@ -65,20 +75,21 @@ def run(graph, dataset, model, reach, num_sim=1000):
     print("Optimal seed size is {}".format(opt_size))
 
     # plot simulation convergence of results
-    df = pd.DataFrame([{'simulations':i+1,'size':sum(results[:i+1])/len(results[:i+1]), 'min':min(results[:i+1])} for i in range(len(results)-1)])
-
-    plt.plot(df['simulations'],df['size'],color='blue',label='opt_size')
-    plt.plot(df['simulations'],df['min'],color='red',label='local_min')
-    plt.xlabel('simulations')
-    plt.ylabel('size')
-    plt.legend()
-    plt.title('Evolution of opt_size vs simulations for {}'.format(dataset))
-    file_name = 'data/{0}/opt_size/opt_size_{0}_{1}_{2}.png'
-    file_name = file_name.format(dataset, model, reach)
-    plt.savefig(file_name)
-    plt.close()
-    print("Saved figure to png")
+    # df = pd.DataFrame([{'simulations':i+1,'size':sum(results[:i+1])/len(results[:i+1]), 'min':min(results[:i+1])} for i in range(len(results)-1)])
+    #
+    # plt.plot(df['simulations'],df['size'],color='blue',label='opt_size')
+    # plt.plot(df['simulations'],df['min'],color='red',label='local_min')
+    # plt.xlabel('simulations')
+    # plt.ylabel('size')
+    # plt.legend()
+    # plt.title('Evolution of opt_size vs simulations for {}'.format(dataset))
+    # file_name = 'data/{0}/opt_size/opt_size_{0}_{1}_{2}.png'
+    # file_name = file_name.format(dataset, model, reach)
+    # plt.savefig(file_name)
+    # plt.close()
+    # print("Saved figure to png")
     save_data(dataset, model, reach, avg, opt_size, num_sim, run_time, best)
+    return opt_size
 
 
 def plotResults(results):

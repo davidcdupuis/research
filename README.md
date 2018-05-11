@@ -8,7 +8,11 @@ Private repo for my thesis
 3. Repeat 1. and 2. 10,000 times
 4. Average number of randomly selected nodes is an approximation of k = |S*|, size of optimal seed set
 
-### Real-Time Influence Maximization (RTIM)
+## Sample Influence Maximization (SIM)
+
+Method based on optimal seed set size to find the optimal seed set.
+
+## Real-Time Influence Maximization (RTIM)
 * Pre-processing
  * Compute inf. score of all nodes using MC simulations
  * Compute inf. threshold as inf. score of top 10% of influencers

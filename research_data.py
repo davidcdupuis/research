@@ -19,6 +19,7 @@ def import_graph_data(dataset, model="wc"):
     file_name = 'data/{0}/{0}_wc.inf'.format(dataset)
     inf_network = {}
     conditions = []
+    guaranteed = set() # users that are guaranteed to be influenced: wc = 1.0
     condict = {}
     t = time.time()
     with open(file_name, 'r') as f:
@@ -42,10 +43,11 @@ def import_graph_data(dataset, model="wc"):
                 raise Exception("Unknown model: {}".format(model))
 
             if inf_score == 1.0:
-                if user1 not in condict:
-                    condict[user1] = 0
-                condict[user1] += 1
-                conditions.append((user1, user2))
+                # if user1 not in condict:
+                #     condict[user1] = 0
+                # condict[user1] += 1
+                # conditions.append((user1, user2))
+                guaranteed.add(user2)
 
     msg = ": Done importing {} in {} seconds"
     print(msg.format(file_name, round(time.time() - t, 4)))
@@ -56,7 +58,7 @@ def import_graph_data(dataset, model="wc"):
     #     num[condict[key]] += 1
 
     # print(num)
-    return (inf_network, conditions)
+    return (inf_network, guaranteed)
 
 
 if __name__ == "__main__":
