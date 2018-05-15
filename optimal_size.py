@@ -44,7 +44,7 @@ def sim_spread(graph, reach, dataset, model, guaranteed):
     while len(non_activated_nodes) > capacityReach:
         # we never pick a node that is guaranteed to be activated
         #  - guaranteed
-        curr = random.sample(non_activated_nodes, 1)[0]
+        curr = random.sample(non_activated_nodes - guaranteed, 1)[0]
         node_spread_sim(graph, curr, non_activated_nodes)
         seed_size += 1
         selected.append(curr)

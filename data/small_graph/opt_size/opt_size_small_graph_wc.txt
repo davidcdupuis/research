@@ -257,3 +257,21 @@ Best size: 4
 Optimal size found: 10.0
 Optimal seed set size: 10
 -----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 0.3444406986236572 seconds
+Best size: 2
+Optimal size found: 10.04
+Optimal seed set size: 11
+-----------------------------------------------------------
+Dataset: small_graph
+Model: wc
+Reach: 100
+Simulations: 10000
+Runtime: 0.2768895626068115 seconds
+Best size: 2
+Optimal size found: 10.0027
+Optimal seed set size: 11
+-----------------------------------------------------------

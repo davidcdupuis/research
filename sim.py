@@ -56,7 +56,7 @@ def run(dataset, model, simulations):
     file_path = "data/{}/sim/opt_seed_{}.csv".format(dataset, model)
     with open(file_path, 'w') as f:
         for seed in opt_seed:
-            f.write(seed)
+            f.write(str(seed))
             f.write("\n")
     print("Optimal seed set saved to {}".format(file_path))
 
