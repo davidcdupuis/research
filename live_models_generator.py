@@ -6,24 +6,34 @@
 
 import argparse
 import random
-import research_data
 import csv
 
-models = ['random_basic', 'random_decay', 'random_long']
+models = ['rand_repeat', 'rand_no_repeat', 'random_long']
 
-def basic_generator(dataset, nodes, num=1):
+def rand_repeat(dataset, nodes, size, num=1):
     '''
         - As many choices as there are users
         - Repetition is possible
     '''
+    # initialize array of size 'nodes'
     for i in range(num):
-        file_name = 'data/{0}/random_model/{0}_s{1}.csv'.format(dataset, i)
+        file_name = 'data/{0}/random_model/rand_repeat_m{1}.csv'.format(dataset, i)
+        stream = [random.choice(range(nodes)) for _ in range(size)]
         with open(file_name, 'w', newline='') as f:
             writer = csv.writer(f)
-            for _ in range(len(nodes)):
-                user = random.sample(nodes, 1)[0]
-                writer.writerow([user])
-        print("> Saved random_basic data to {}".format(file_name))
+            for val in stream:
+                writer.writerow([val])
+        print("> Saved rand_repeat data to {}".format(file_name))
+
+def rand_no_repeat(dataset, nodes, size, num=1):
+    for i in range(num):
+        file_name = 'data/{0}/random_model/rand_no_repeat_m{1}.txt'.format(dataset, i)
+        stream = random.sample(range(nodes), size)
+        with open(file_name, 'w', newline='') as f:
+            writer = csv.writer(f)
+            for val in stream:
+                writer.writerow([val])
+        print("> Saved rand_no_repeat data to {}".format(file_name))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Live Models generator")
@@ -33,13 +43,17 @@ if __name__ == "__main__":
                         help='What data to generate model for.')
     parser.add_argument('-n', '--number', type=int,
                         help='How many random datasets you want')
+    parser.add_argument('-V', '--nodes', type=int, help='number of nodes')
+    parser.add_argument('-s', '--stream', type=int, help='size of stream')
     args = parser.parse_args()
 
     print("Model [{}]".format(args.model))
     print("Dataset [{}]".format(args.dataset))
 
-    graph, _ = research_data.import_graph_data(args.dataset)
-    keys = graph.keys()
+    # graph, _ = research_data.import_graph_data(args.dataset)
+    # keys = graph.keys()
 
-    if args.model == "random_basic":
-        basic_generator(args.dataset, keys, args.number)
+    if args.model == "rand_repeat":
+        rand_repeat(args.dataset, args.nodes, args.stream, args.number)
+    elif args.model == "rand_no_repeat":
+        rand_no_repeat(args.dataset, args.nodes, args.stream, args.number)
